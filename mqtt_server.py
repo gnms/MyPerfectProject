@@ -48,20 +48,14 @@ class mqtt_server(object):
                     client.client_id))
                 data = client.recv_msg(3).decode("utf-8")
                 if self.validate_size.match(data):
-                    self._log.info('Msg size = {} Client {}'.format(
-                        data, client.client_id))
 
                     msg_size = int(data)
                     data = client.recv_msg(msg_size).decode("utf-8")
-                    self._log.info('Msg = {} Client {}'.format(
-                        data, client.client_id))
                     if data:
                         # Set the response to echo back the recieved data
                         # split to topic and message "topt:msg"
                         data_Str = data
                         mqtt_msg = data_Str.split(':')
-                        self._log.info(
-                            'mqtt_msg {} data_Str {}'.format(mqtt_msg, data_Str))
                         if mqtt_msg[0] == "subscribe":
                             self._log.info(
                                 'Client {} subscribe {}'.format(client.client_id, mqtt_msg[1]))

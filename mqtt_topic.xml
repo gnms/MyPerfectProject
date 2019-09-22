@@ -1,0 +1,13 @@
+<ifd>
+<simulation>
+    <client message="client_name" type="str"/>
+    <idle message="client_name" type="str"/>
+    <verbose />
+    <start />
+    <stop />
+    <speed message="scale" type="int"/>
+</simulation>
+<environment>
+    <date_time message="time" type="str"/>
+</environment>
+</ifd>    
