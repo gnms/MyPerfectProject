@@ -1,13 +1,13 @@
 <ifd>
 <simulation>
-    <client message="client_name" type="str"/>
+    <connected message="client_name" type="str"/>
+    <disconnected message="client_name" type="str"/>
     <idle message="client_name" type="str"/>
     <verbose />
-    <start />
-    <stop />
+    <started message="status" type="bool" text="start:stop"/>
     <speed message="scale" type="int"/>
 </simulation>
 <environment>
-    <date_time message="time" type="str"/>
+    <date_time message="time" type="date_time"/>
 </environment>
 </ifd>    

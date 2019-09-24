@@ -14,3 +14,7 @@ def test_mqtt_topic():
     client.add_active_client("PELLE")
     assert len(client.active_clients) == 2
     assert client.active_clients["PELLE"] == CLIENT_STATES.IDLE
+
+    client.delete_active_client("PELLE")
+    assert len(client.active_clients) == 1
+    assert client.active_clients["KALLE"] == CLIENT_STATES.IDLE

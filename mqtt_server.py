@@ -44,50 +44,67 @@ class mqtt_server(object):
 
         while True:
             try:
-                self._log.info('Client {} wait for data'.format(
-                    client.client_id))
+                # self._log.info('Client {} wait for data'.format(
+                #     client.client_id))
                 data = client.recv_msg(3).decode("utf-8")
                 if self.validate_size.match(data):
 
                     msg_size = int(data)
-                    data = client.recv_msg(msg_size).decode("utf-8")
+                    #data = client.recv_msg(msg_size).decode("utf-8")
+                    read_data = 0
+                    data = ""
+                    while read_data < msg_size:
+                        data = data + \
+                            client.recv_msg(msg_size-read_data).decode("utf-8")
+                        read_data = len(data)
+                        if read_data < msg_size:
+                            self._log.info('Client {} MOREEEEEE'.format(
+                                client.client_id))
+
+                    # self._log.info('Client {} new data'.format(data))
                     if data:
                         # Set the response to echo back the recieved data
                         # split to topic and message "topt:msg"
                         data_Str = data
-                        mqtt_msg = data_Str.split(':')
-                        if mqtt_msg[0] == "subscribe":
+                        delimiter_pos = data_Str.find(':')
+
+                        topic = data_Str[:delimiter_pos]
+                        pyaload = data_Str[delimiter_pos+1:]
+
+                        if topic == "subscribe":
                             self._log.info(
-                                'Client {} subscribe {}'.format(client.client_id, mqtt_msg[1]))
-                            client.add_topic(mqtt_msg[1])
+                                'Client {} subscribe {}'.format(client.client_id, pyaload))
+                            client.add_topic(pyaload)
 
                         else:
-                            self.broadcastMsg(mqtt_msg[0], mqtt_msg[1])
+                            if topic == "simulation/connected":
+                                client.set_name(pyaload)
+
+                            self.broadcastMsg(topic, pyaload)
                     else:
                         raise error('Client disconnected')
                 else:
-                    self._log.info(
-                        'False to parse size of message = {}'.format(data))
-                    client.close_client()
-                    del self.client_list[client.client_id]
+                    self.remove_client(client.client_id)
                     return False
             except:
-                self._log.info(
-                    'Client {} disconnected'.format(client.client_id))
-                client.close_client()
-                del self.client_list[client.client_id]
+                self.remove_client(client.client_id)
                 return False
 
     def broadcastMsg(self, topic, msg):
-        self._log.info('Send topic {} message {}"'.format(topic, msg))
+        # self._log.info('Send topic {} message {}"'.format(topic, msg))
         for clientId in self.client_list.keys():
             try:
                 self.client_list[clientId].send_msg(topic, msg)
             except:
-                self._log.info(
-                    'Client {} disconnected'.format(clientId))
-                self.client_list[clientId].close_client()
-                del self.client_list[clientId]
+                self.remove_client(clientId)
+
+    def remove_client(self, clientId):
+        client_name = self.client_list[clientId].client_name
+        self._log.info(
+            'Client {} disconnected'.format(clientId))
+        self.client_list[clientId].close_client()
+        del self.client_list[clientId]
+        self.broadcastMsg("simulation/disconnected", client_name)
 
 
 if __name__ == "__main__":

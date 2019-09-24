@@ -24,19 +24,37 @@ class mqtt_client():
 
         self.mqtt_topic = mqtt_topic_ifd()
 
-        self.mqtt_topic.simulation.client.publish(self.client_name)
+        self.mqtt_topic.simulation.connected.publish(self.client_name)
 
     def run(self):
+        self.mqtt_topic.environment.date_time.subscribe()
+        self.mqtt_topic.simulation.verbose.subscribe()
         self.setup()
         self.send_message_to_server()
         while True:
-            self._log.info('Client {} wait for data'.format(self.client_name))
+            # self._log.info('Client {} wait for data'.format(self.client_name))
             data = self.socket.recv(3).decode("utf-8")
             msg_size = int(data)
-            data = self.socket.recv(msg_size).decode("utf-8")
+            #data = self.socket.recv(msg_size).decode("utf-8")
+            read_data = 0
+            data = ""
+            while read_data < msg_size:
+                data = data + \
+                    self.socket.recv(msg_size-read_data).decode("utf-8")
+                read_data = len(data)
+                if read_data < msg_size:
+                    self._log.info('Client {} MOREEEEEE'.format(
+                        self.client_name))
             if data:
-                mqtt_msg = data.split(':')
-                self.notify_client(mqtt_msg[0], mqtt_msg[1])
+                delimiter_pos = data.find(':')
+                topic = data[:delimiter_pos]
+                pyaload = data[delimiter_pos+1:]
+                if self.mqtt_topic.simulation.verbose == topic:
+                    self.mqtt_topic.simulation.connected.publish(
+                        self.client_name)
+                    self.send_message_to_server()
+                else:
+                    self.notify_client(topic, pyaload)
 
     def setup(self):
         pass

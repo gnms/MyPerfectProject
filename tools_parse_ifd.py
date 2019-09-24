@@ -13,9 +13,11 @@ def get_childnode(node):
 
 
 def parse_node(node, parent):
+    # Go through all childs in tree
     for n in node.childNodes:
         if type(n) == xml.dom.minidom.Element:
             name = "{}{}".format(parent, n.tagName)
+            # Check if it is root for ifd or not
             if parent == None:
                 name = "{}{}".format(parent, n.tagName)
                 parse_node(n, "")
@@ -28,18 +30,20 @@ def parse_node(node, parent):
                 file.write("    def __init__(self):\n")
                 file.write("        self.message_to_send = []\n")
                 file.write("        message_dictonary = dict()\n")
+                file.write("        lock = Lock()\n")
                 file.write(
                     "        self.message_dictonary = message_dictonary\n")
 
             else:
                 file.write(
-                    "    def __init__(self, message_to_send, message_dictonary):\n")
+                    "    def __init__(self, message_to_send, message_dictonary, lock):\n")
                 file.write("        self.message_to_send = message_to_send\n")
                 file.write(
                     "        message_dictonary['{}'] = self\n".format(name))
-
-            if parent != None:
                 file.write("        self.topic = '{}'\n".format(name))
+
+            file.write("        self.lock = lock\n")
+
             childs = get_childnode(n)
 
             if len(childs) == 0:
@@ -49,8 +53,16 @@ def parse_node(node, parent):
                     file.write("\n")
                     file.write("    def get_{}(self):\n".format(
                         n.getAttribute("message")))
+                    converter_from_string = ""
+                    if n.getAttribute("type") == "bool":
+                        converter_from_string = "'True' in"
+                    elif n.getAttribute("type") == "date_time":
+                        converter_from_string = "string_to_time"
+                    elif n.getAttribute("type") == "int":
+                        converter_from_string = "int"
+
                     file.write("        return {}(self.payload)\n".format(
-                        n.getAttribute("type")))
+                        converter_from_string))
                     file.write("\n")
                     file.write("    def set_{}(self, {}):\n".format(
                         n.getAttribute("message"), n.getAttribute("message")))
@@ -72,24 +84,33 @@ def parse_node(node, parent):
                 file.write("           3, '0') + message_to_send\n")
 
                 file.write("        return message_to_send\n")
+
                 file.write("\n")
 
                 if n.getAttribute("message") == "":
                     file.write("    def publish(self):\n")
+                    file.write("        self.lock.acquire()\n")
                     file.write("        message = ''\n")
                 else:
                     file.write("    def publish(self, {}):\n".format(n.getAttribute(
                         "message")))
-                    file.write("        message = {}\n".format(n.getAttribute(
+                    file.write("        self.lock.acquire()\n")
+                    convert_to_string = ""
+                    if n.getAttribute("type") == "date_time":
+                        convert_to_string = "time_to_string"
+                    file.write("        message = {}({})\n".format(convert_to_string, n.getAttribute(
                         "message")))
                 file.write(
                     "        self.message_to_send.append(self.create_message(self.topic, message))\n")
+                file.write("        self.lock.release()\n")
 
                 file.write("\n")
 
                 file.write("    def subscribe(self):\n")
+                file.write("        self.lock.acquire()\n")
                 file.write(
                     "        self.message_to_send.append(self.create_message('subscribe', self.topic))\n")
+                file.write("        self.lock.release()\n")
 
                 file.write("    def __eq__(self, other):\n")
                 file.write("        if other == None:\n")
@@ -106,7 +127,7 @@ def parse_node(node, parent):
                 file.write("            return False\n")
 
             for child in childs:
-                file.write("        self.{} = mqtt_topic_{}(self.message_to_send, message_dictonary)\n".format(
+                file.write("        self.{} = mqtt_topic_{}(self.message_to_send, message_dictonary, self.lock)\n".format(
                     child, child))
             file.write("\n")
 
@@ -115,7 +136,7 @@ def parse_node(node, parent):
                 file.write("        return self.message_to_send\n")
 
                 file.write("    def clear_message_to_send(self):\n")
-                file.write("        self.message_to_send = []\n")
+                file.write("        self.message_to_send.clear()\n")
 
                 file.write("    def get_message(self, message_as_text):\n")
                 file.write(
@@ -124,6 +145,15 @@ def parse_node(node, parent):
         file.write("\n")
         file.write("\n")
 
+
+file.write("from datetime import datetime\n")
+file.write("from threading import Lock\n")
+file.write("def string_to_time(timeStr):\n")
+file.write("    return datetime.strptime(timeStr, '%Y-%m-%d %H:%M:%S.%f')\n")
+
+
+file.write("def time_to_string(_time):\n")
+file.write("    return _time.strftime('%Y-%m-%d %H:%M:%S.%f')\n")
 
 parse_node(doc, None)
 file.close()

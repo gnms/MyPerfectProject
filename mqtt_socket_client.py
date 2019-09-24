@@ -5,6 +5,10 @@ class mqtt_socket_client:
         self.socket = socket_client
         self.topic_list = list()
         self.client_id = client_id
+        self.client_name = ""
+
+    def set_name(self, name):
+        self.client_name = name
 
     def add_topic(self, topic):
         # Check if we have topic in list, if we do not have it we add it to topic list
