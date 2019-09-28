@@ -4,7 +4,7 @@ from threading import Thread
 from mqtt_topic import string_to_time
 
 
-class panel_time_gui(Thread):
+class panel_simulation_gui(Thread):
     def __init__(self, mqtt_client):
         Thread.__init__(self)
         self.mqtt_client = mqtt_client
@@ -34,11 +34,14 @@ class panel_time_gui(Thread):
         # Code to add widgets will go here...
         self.gui.title("panel_time")
 
-        simulation_frame = tkinter.LabelFrame(self.gui, text='simulation')
-        simulation_frame.pack(side=tkinter.LEFT, anchor=tkinter.NW)
+        main_frame = tkinter.Frame(self.gui)
+        main_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
+
+        simulation_frame = tkinter.LabelFrame(main_frame, text='simulation')
+        simulation_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
         self.started_btn = tkinter.Button(
             simulation_frame, text="start", command=self.on_started)
-        self.started_btn.pack(side=tkinter.LEFT, anchor=tkinter.NW)
+        self.started_btn.pack(side=tkinter.LEFT)
 
         speedframe = tkinter.Frame(simulation_frame)
         speedframe.pack(side=tkinter.LEFT)
@@ -56,9 +59,12 @@ class panel_time_gui(Thread):
             speedframe, text="send", command=self.on_speed)
         speed_btn.pack(side=tkinter.LEFT)
 
+        fillframe = tkinter.LabelFrame(simulation_frame, text='FILL')
+        fillframe.pack(side=tkinter.RIGHT, fill=tkinter.X, expand=1)
+
         # environment
-        environment_frame = tkinter.LabelFrame(self.gui, text='environment')
-        environment_frame.pack()
+        environment_frame = tkinter.LabelFrame(main_frame, text='environment')
+        environment_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
 
         date_timeframe = tkinter.Frame(environment_frame)
         date_timeframe.pack(side=tkinter.LEFT)
@@ -75,6 +81,22 @@ class panel_time_gui(Thread):
             date_timeframe, text="send", command=self.on_date_time)
         date_time_btn.pack(side=tkinter.LEFT)
 
+        fillframe = tkinter.LabelFrame(environment_frame, text='FILL')
+        fillframe.pack(side=tkinter.RIGHT, fill=tkinter.X, expand=1)
+
+        # clients
+        client_frame = tkinter.LabelFrame(main_frame, text='clients')
+        client_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
+
+        self.client_list = tkinter.Listbox(client_frame)
+        # self.client_list.insert(1, "Python")
+        # self.client_list.insert(2, "Perl")
+        self.client_list.pack(side=tkinter.LEFT)
+        fillframe = tkinter.LabelFrame(client_frame, text='FILL')
+        fillframe.pack(side=tkinter.RIGHT, fill=tkinter.X, expand=1)
+
+        fillframe = tkinter.Frame(self.gui)
+        fillframe.pack(fill=tkinter.BOTH, expand=1, anchor=tkinter.NW)
         self.gui.mainloop()
 
     def show_gui(self):

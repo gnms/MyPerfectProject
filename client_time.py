@@ -62,7 +62,8 @@ class client_time(mqtt_client):
 
             # Check if times in not running
             if self.timer == None and self.is_all_clients_idle():
-                self.update_time()
+                if self.state == CLIENT_TIME_STATES.RUNNING:
+                    self.update_time()
 
         elif (self.mqtt_topic.simulation.started == topic):
             started = self.mqtt_topic.simulation.started.get_status()
@@ -97,7 +98,8 @@ class client_time(mqtt_client):
 
             # Check if times in not running
             if self.timer == None and self.is_all_clients_idle():
-                self.update_time()
+                if self.state == CLIENT_TIME_STATES.RUNNING:
+                    self.update_time()
 
         # else:
         #     self._log.info('NONE')

@@ -10,4 +10,8 @@
 <environment>
     <date_time message="time" type="date_time"/>
 </environment>
+<sensors>
+    <outdoor_light message="light_value" type="float"/>
+    <sun_angle message="sun_angle" type="float"/>
+</sensors>
 </ifd>    
