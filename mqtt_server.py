@@ -101,7 +101,7 @@ class mqtt_server(object):
     def remove_client(self, clientId):
         client_name = self.client_list[clientId].client_name
         self._log.info(
-            'Client {} disconnected'.format(clientId))
+            'Client {} disconnected with name {}'.format(clientId, client_name))
         self.client_list[clientId].close_client()
         del self.client_list[clientId]
         self.broadcastMsg("simulation/disconnected", client_name)

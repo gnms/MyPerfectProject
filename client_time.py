@@ -123,7 +123,7 @@ class client_time(mqtt_client):
 
             self.timer = threading.Timer(1/self.scale, self.update_time)
             self.timer.start()
-            # self._log.info('New Time')
+            #self._log.info('New Time = {}'.format(self.simulation_time))
             self.step_milliseconds(1000)
             self.mqtt_topic.environment.date_time.publish(self.simulation_time)
             self.send_message_to_server()

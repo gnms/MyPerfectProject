@@ -3,7 +3,7 @@ from astral import Astral
 import numpy as np
 
 
-class client_daylight(mqtt_client):
+class sensor_daylight(mqtt_client):
     def __init__(self):
         mqtt_client.__init__(self, "DAY_LIGHT")
         self.astral = Astral()
@@ -30,6 +30,6 @@ class client_daylight(mqtt_client):
 
 
 if __name__ == '__main__':
-    client_daylight = client_daylight()
+    sensor_daylight = sensor_daylight()
 
-    client_daylight.run()
+    sensor_daylight.run()

@@ -89,6 +89,12 @@ class panel_simulation_gui(Thread):
         client_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
 
         self.client_list = tkinter.Listbox(client_frame)
+
+        for existing_client in self.mqtt_client.online_client_list:
+            self.client_list.insert(
+                self.client_list.size() + 1, existing_client)
+            self.mqtt_client._log.info('Add client {}'.format(existing_client))
+
         # self.client_list.insert(1, "Python")
         # self.client_list.insert(2, "Perl")
         self.client_list.pack(side=tkinter.LEFT)
@@ -97,6 +103,7 @@ class panel_simulation_gui(Thread):
 
         fillframe = tkinter.Frame(self.gui)
         fillframe.pack(fill=tkinter.BOTH, expand=1, anchor=tkinter.NW)
+
         self.gui.mainloop()
 
     def show_gui(self):
