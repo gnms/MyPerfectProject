@@ -13,5 +13,6 @@
 <sensors>
     <outdoor_light message="light_value" type="float"/>
     <sun_angle message="sun_angle" type="float"/>
+    <cloude message="cloude" type="float"/>
 </sensors>
 </ifd>    

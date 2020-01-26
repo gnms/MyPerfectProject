@@ -1,10 +1,7 @@
 from client_daylight import client_daylight
 
 
-def test_daylight_model():
+def test_daylight_client():
     client = client_daylight()
-    assert 896 == client.get_light_from_sun_angle(10)
-    assert 290123.6 == client.get_light_from_sun_angle(0)
-    assert 532705.2 == client.get_light_from_sun_angle(-2)
-    assert 706429 == client.get_light_from_sun_angle(-24)
+
     # assert client.active_clients["KALLE"] == CLIENT_STATES.IDLE

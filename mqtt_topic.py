@@ -400,7 +400,7 @@ class mqtt_topic_outdoor_light:
         self.payload = None
 
     def get_light_value(self):
-        return (self.payload)
+        return float(self.payload)
 
     def set_light_value(self, light_value):
         self.payload = light_value
@@ -451,7 +451,7 @@ class mqtt_topic_sun_angle:
         self.payload = None
 
     def get_sun_angle(self):
-        return (self.payload)
+        return float(self.payload)
 
     def set_sun_angle(self, sun_angle):
         self.payload = sun_angle
@@ -493,6 +493,57 @@ class mqtt_topic_sun_angle:
 
 
 
+class mqtt_topic_cloude:
+    def __init__(self, message_to_send, message_dictonary, lock):
+        self.message_to_send = message_to_send
+        message_dictonary['sensors/cloude'] = self
+        self.topic = 'sensors/cloude'
+        self.lock = lock
+        self.payload = None
+
+    def get_cloude(self):
+        return float(self.payload)
+
+    def set_cloude(self, cloude):
+        self.payload = cloude
+
+    def create_message(self, topic, message):
+        if isinstance(topic, str):
+            topic_str = topic
+        else:
+            topic_str = topic.topic
+        message_to_send = '{}:{}'.format(topic_str, message)
+        message_to_send = str(len(message_to_send)).rjust(
+           3, '0') + message_to_send
+        return message_to_send
+
+    def publish(self, cloude):
+        self.lock.acquire()
+        message = (cloude)
+        self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def subscribe(self):
+        self.lock.acquire()
+        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.lock.release()
+    def __eq__(self, other):
+        if other == None:
+            return False
+
+        if type(other) is str:
+            other_topic = other
+        else:            other_topic = other.topic
+
+        if self.topic == other_topic:
+            return True
+        else:
+            return False
+
+
+
+
+
 class mqtt_topic_sensors:
     def __init__(self, message_to_send, message_dictonary, lock):
         self.message_to_send = message_to_send
@@ -501,6 +552,7 @@ class mqtt_topic_sensors:
         self.lock = lock
         self.outdoor_light = mqtt_topic_outdoor_light(self.message_to_send, message_dictonary, self.lock)
         self.sun_angle = mqtt_topic_sun_angle(self.message_to_send, message_dictonary, self.lock)
+        self.cloude = mqtt_topic_cloude(self.message_to_send, message_dictonary, self.lock)
 
 
 

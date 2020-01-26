@@ -60,6 +60,8 @@ def parse_node(node, parent):
                         converter_from_string = "string_to_time"
                     elif n.getAttribute("type") == "int":
                         converter_from_string = "int"
+                    elif n.getAttribute("type") == "float":
+                        converter_from_string = "float"
 
                     file.write("        return {}(self.payload)\n".format(
                         converter_from_string))
