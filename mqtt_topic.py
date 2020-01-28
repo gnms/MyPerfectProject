@@ -16,10 +16,10 @@ class mqtt_topic_connected:
         self.lock = lock
         self.payload = None
 
-    def get_client_name(self):
+    def get_payload(self):
         return (self.payload)
 
-    def set_client_name(self, client_name):
+    def set_payload(self, client_name):
         self.payload = client_name
 
     def create_message(self, topic, message):
@@ -67,10 +67,10 @@ class mqtt_topic_disconnected:
         self.lock = lock
         self.payload = None
 
-    def get_client_name(self):
+    def get_payload(self):
         return (self.payload)
 
-    def set_client_name(self, client_name):
+    def set_payload(self, client_name):
         self.payload = client_name
 
     def create_message(self, topic, message):
@@ -118,10 +118,10 @@ class mqtt_topic_idle:
         self.lock = lock
         self.payload = None
 
-    def get_client_name(self):
+    def get_payload(self):
         return (self.payload)
 
-    def set_client_name(self, client_name):
+    def set_payload(self, client_name):
         self.payload = client_name
 
     def create_message(self, topic, message):
@@ -213,10 +213,10 @@ class mqtt_topic_started:
         self.lock = lock
         self.payload = None
 
-    def get_status(self):
+    def get_payload(self):
         return 'True' in(self.payload)
 
-    def set_status(self, status):
+    def set_payload(self, status):
         self.payload = status
 
     def create_message(self, topic, message):
@@ -264,10 +264,10 @@ class mqtt_topic_speed:
         self.lock = lock
         self.payload = None
 
-    def get_scale(self):
+    def get_payload(self):
         return int(self.payload)
 
-    def set_scale(self, scale):
+    def set_payload(self, scale):
         self.payload = scale
 
     def create_message(self, topic, message):
@@ -334,10 +334,10 @@ class mqtt_topic_date_time:
         self.lock = lock
         self.payload = None
 
-    def get_time(self):
+    def get_payload(self):
         return string_to_time(self.payload)
 
-    def set_time(self, time):
+    def set_payload(self, time):
         self.payload = time
 
     def create_message(self, topic, message):
@@ -399,10 +399,10 @@ class mqtt_topic_outdoor_light:
         self.lock = lock
         self.payload = None
 
-    def get_light_value(self):
+    def get_payload(self):
         return float(self.payload)
 
-    def set_light_value(self, light_value):
+    def set_payload(self, light_value):
         self.payload = light_value
 
     def create_message(self, topic, message):
@@ -450,10 +450,10 @@ class mqtt_topic_sun_angle:
         self.lock = lock
         self.payload = None
 
-    def get_sun_angle(self):
+    def get_payload(self):
         return float(self.payload)
 
-    def set_sun_angle(self, sun_angle):
+    def set_payload(self, sun_angle):
         self.payload = sun_angle
 
     def create_message(self, topic, message):
@@ -501,10 +501,10 @@ class mqtt_topic_cloude:
         self.lock = lock
         self.payload = None
 
-    def get_cloude(self):
+    def get_payload(self):
         return float(self.payload)
 
-    def set_cloude(self, cloude):
+    def set_payload(self, cloude):
         self.payload = cloude
 
     def create_message(self, topic, message):

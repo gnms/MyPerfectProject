@@ -1,5 +1,6 @@
 import socket
 import logging
+import sys
 from mqtt_topic import mqtt_topic_ifd
 
 
@@ -26,10 +27,20 @@ class mqtt_client():
 
         self.mqtt_topic.simulation.connected.publish(self.client_name)
 
+        self.calback_dictonary = dict()
+
     def run(self):
         self.mqtt_topic.environment.date_time.subscribe()
         self.mqtt_topic.simulation.verbose.subscribe()
         self.setup()
+        for name in self.mqtt_topic.message_dictonary:
+            try:
+                callback = getattr(self, name.replace("/", "_"))
+                self.mqtt_topic.message_dictonary[name].subscribe()
+                self.calback_dictonary[name] = callback
+            # Method exists and was used.
+            except AttributeError:
+                pass
         self.send_message_to_server()
         while True:
             # self._log.info('Client {} wait for data'.format(self.client_name))
@@ -58,14 +69,21 @@ class mqtt_client():
 
     def setup(self):
         pass
-        # self.subscribe("mats")
-        # self.subscribe("per")
 
     def notify_client(self, topic_str, message):
         topic = self.mqtt_topic.get_message(topic_str)
         if topic != None:
             topic.payload = message
-            self.handel_messages(topic)
+
+            if topic_str in self.calback_dictonary:
+                payload_to_msg = None
+                try:
+                    payload_to_msg = topic.get_payload()
+                    self.calback_dictonary[topic_str](payload_to_msg)
+                except:
+                    self.calback_dictonary[topic_str]()
+
+            # self.handel_messages(topic)
             if self.mqtt_topic.environment.date_time == topic:
                 self.mqtt_topic.simulation.idle.publish(self.client_name)
 

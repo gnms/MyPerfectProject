@@ -51,8 +51,7 @@ def parse_node(node, parent):
                 if n.getAttribute("message") != "":
                     file.write("        self.payload = None\n")
                     file.write("\n")
-                    file.write("    def get_{}(self):\n".format(
-                        n.getAttribute("message")))
+                    file.write("    def get_payload(self):\n")
                     converter_from_string = ""
                     if n.getAttribute("type") == "bool":
                         converter_from_string = "'True' in"
@@ -66,8 +65,8 @@ def parse_node(node, parent):
                     file.write("        return {}(self.payload)\n".format(
                         converter_from_string))
                     file.write("\n")
-                    file.write("    def set_{}(self, {}):\n".format(
-                        n.getAttribute("message"), n.getAttribute("message")))
+                    file.write("    def set_payload(self, {}):\n".format(
+                        n.getAttribute("message")))
                     file.write("        self.payload = {}\n".format(
                         n.getAttribute("message")))
 

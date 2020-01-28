@@ -25,40 +25,22 @@ class client_daylight(mqtt_client):
         self.light_value = 0
         self.cloude_value = 0
 
-    def setup(self):
-        self.mqtt_topic.sensors.cloude.subscribe()
-        self.mqtt_topic.sensors.sun_angle.subscribe()
-        self.mqtt_topic.sensors.outdoor_light.subscribe()
+    def sensors_cloude(self, cloude_value):
+        self.cloude_value = cloude_value
 
-    def handel_messages(self, topic):
-        if self.mqtt_topic.environment.date_time == topic:
-            Xnew = [[self.sun_angle, self.light_value, self.cloude_value]]
-            value = self.joblib_model.predict(Xnew)
-            self._log.info('day/night = {}'.format(
-                value))
+    def sensors_sun_angle(self, sun_angle):
+        self.sun_angle = sun_angle
 
-        if self.mqtt_topic.sensors.cloude == topic:
-            self.cloude_value = self.mqtt_topic.sensors.cloude.get_cloude()
-        if self.mqtt_topic.sensors.sun_angle == topic:
-            self.sun_angle = self.mqtt_topic.sensors.sun_angle.get_sun_angle()
-        if self.mqtt_topic.sensors.outdoor_light == topic:
-            self.light_value = math.log(
-                self.mqtt_topic.sensors.outdoor_light.get_light_value(), 1.3)
+    def sensors_outdoor_light(self, light_value):
+        self.light_value = math.log(light_value, 1.3)
+
+    def environment_date_time(self, time):
+        Xnew = [[self.sun_angle, self.light_value, self.cloude_value]]
+        value = self.joblib_model.predict(Xnew)
+        self._log.info('day/night = {}'.format(
+            value))
 
 
-#   def setCurrentState(state, light, sun, cloud):
-#         Xnew = [[sun, light, cloud]]
-#         value = joblib_model.predict(Xnew)
-
-#         if value == 0:
-#             newState = 'dark'
-#         else:
-#             newState = 'light'
-
-#         if newState != state:
-#             logger.info(
-#                 "Change light state from {} to {}".format(state, newState))
-#         return newState
 if __name__ == '__main__':
     client_daylight = client_daylight()
 

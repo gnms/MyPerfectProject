@@ -79,3 +79,10 @@ def test_mqtt_topic_publish_date_time():
     topic.payload = "2019-09-23 18:22:23.000034"
 
     #assert str(t) == str(topic.get_time())
+
+
+def test_mqtt_topic_enumerate_all():
+    ifd = mqtt_topic_ifd()
+    for name in ifd.message_dictonary:
+        print("name = {}".format(name.replace("/", "_")))
+        ifd.message_dictonary[name].subscribe()
