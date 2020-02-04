@@ -37,8 +37,13 @@ class client_daylight(mqtt_client):
     def environment_date_time(self, time):
         Xnew = [[self.sun_angle, self.light_value, self.cloude_value]]
         value = self.joblib_model.predict(Xnew)
-        self._log.info('day/night = {}'.format(
-            value))
+        # self._log.info('day/night = {}'.format(
+        #     value))
+
+        if value == 1:
+            self.mqtt_topic.environment.is_dark_outside.publish(False)
+        else:
+            self.mqtt_topic.environment.is_dark_outside.publish(True)
 
 
 if __name__ == '__main__':

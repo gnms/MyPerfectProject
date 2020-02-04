@@ -35,9 +35,12 @@ class mqtt_client():
         self.setup()
         for name in self.mqtt_topic.message_dictonary:
             try:
-                callback = getattr(self, name.replace("/", "_"))
-                self.mqtt_topic.message_dictonary[name].subscribe()
-                self.calback_dictonary[name] = callback
+                method_name = name.replace("/", "_")
+                if hasattr(self, method_name):
+                    callback = getattr(self, method_name)
+                    if callable(callback):
+                        self.mqtt_topic.message_dictonary[name].subscribe()
+                        self.calback_dictonary[name] = callback
             # Method exists and was used.
             except AttributeError:
                 pass
@@ -46,7 +49,7 @@ class mqtt_client():
             # self._log.info('Client {} wait for data'.format(self.client_name))
             data = self.socket.recv(3).decode("utf-8")
             msg_size = int(data)
-            #data = self.socket.recv(msg_size).decode("utf-8")
+            # data = self.socket.recv(msg_size).decode("utf-8")
             read_data = 0
             data = ""
             while read_data < msg_size:
