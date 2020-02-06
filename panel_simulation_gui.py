@@ -39,6 +39,7 @@ class panel_simulation_gui(Thread):
 
         simulation_frame = tkinter.LabelFrame(main_frame, text='simulation')
         simulation_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
+
         self.started_btn = tkinter.Button(
             simulation_frame, text="start", command=self.on_started)
         self.started_btn.pack(side=tkinter.LEFT)

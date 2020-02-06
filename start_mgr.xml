@@ -1,0 +1,10 @@
+<scripts>
+    <script name="Mqtt Server" path="mqtt_server.py" auto_start="true"/>
+    <script name="Timepanel" path="panel_simulation.py" auto_start="true"/>
+    <!--<script name="Logger" path="gnome-terminal -x bash -c 'tail -F my_perfect_project.log; exec bash'" auto_start="true"/>-->
+    <script name="Day info" path="sensor_dayinfo.py"/>
+    <script name="Daylight sensor" path="sensor_daylight.py"/>
+    <script name="Time Client" path="client_time.py"/>
+    <script name="Lamp manager" path="client_light_mgr.py"/>
+    <script name="Light Client" path="client_daylight.py"/>
+</scripts>    
