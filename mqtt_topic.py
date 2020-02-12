@@ -1235,6 +1235,30 @@ class mqtt_topic_ifd:
         self.day_info = mqtt_topic_day_info(self.message_to_send, message_dictonary, self.lock)
         self.house = mqtt_topic_house(self.message_to_send, message_dictonary, self.lock)
 
+    def subscribe_all(self):
+        self.simulation.connected.subscribe()
+        self.simulation.disconnected.subscribe()
+        self.simulation.idle.subscribe()
+        self.simulation.verbose.subscribe()
+        self.simulation.started.subscribe()
+        self.simulation.speed.subscribe()
+        self.environment.date_time.subscribe()
+        self.environment.is_dark_outside.subscribe()
+        self.sensors.outdoor_light.subscribe()
+        self.sensors.sun_angle.subscribe()
+        self.sensors.sun_noon.subscribe()
+        self.sensors.sun_dawn.subscribe()
+        self.sensors.sun_dusk.subscribe()
+        self.sensors.sun_daylight.subscribe()
+        self.sensors.cloude.subscribe()
+        self.day_info.special_day.subscribe()
+        self.day_info.name_of_day.subscribe()
+        self.day_info.name_day.subscribe()
+        self.day_info.red_day.subscribe()
+        self.day_info.working_day.subscribe()
+        self.house.human.is_awake.subscribe()
+        self.house.lamp_state.subscribe()
+
     def get_message_to_send(self):
         return self.message_to_send
     def clear_message_to_send(self):

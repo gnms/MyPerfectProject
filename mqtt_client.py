@@ -29,21 +29,24 @@ class mqtt_client():
 
         self.calback_dictonary = dict()
 
+        self.subscribe_with_method_name = True
+
     def run(self):
         self.mqtt_topic.environment.date_time.subscribe()
         self.mqtt_topic.simulation.verbose.subscribe()
         self.setup()
-        for name in self.mqtt_topic.message_dictonary:
-            try:
-                method_name = name.replace("/", "_")
-                if hasattr(self, method_name):
-                    callback = getattr(self, method_name)
-                    if callable(callback):
-                        self.mqtt_topic.message_dictonary[name].subscribe()
-                        self.calback_dictonary[name] = callback
-            # Method exists and was used.
-            except AttributeError:
-                pass
+        if self.subscribe_with_method_name:
+            for name in self.mqtt_topic.message_dictonary:
+                try:
+                    method_name = name.replace("/", "_")
+                    if hasattr(self, method_name):
+                        callback = getattr(self, method_name)
+                        if callable(callback):
+                            self.mqtt_topic.message_dictonary[name].subscribe()
+                            self.calback_dictonary[name] = callback
+                # Method exists and was used.
+                except AttributeError:
+                    pass
         self.send_message_to_server()
         while True:
             # self._log.info('Client {} wait for data'.format(self.client_name))
@@ -78,15 +81,17 @@ class mqtt_client():
         if topic != None:
             topic.payload = message
 
-            if topic_str in self.calback_dictonary:
-                payload_to_msg = None
-                try:
-                    payload_to_msg = topic.get_payload()
-                    self.calback_dictonary[topic_str](payload_to_msg)
-                except:
-                    self.calback_dictonary[topic_str]()
+            if self.subscribe_with_method_name:
+                if topic_str in self.calback_dictonary:
+                    payload_to_msg = None
+                    try:
+                        payload_to_msg = topic.get_payload()
+                        self.calback_dictonary[topic_str](payload_to_msg)
+                    except:
+                        self.calback_dictonary[topic_str]()
+            else:
+                self.handel_messages(topic)
 
-            # self.handel_messages(topic)
             if self.mqtt_topic.environment.date_time == topic:
                 self.mqtt_topic.simulation.idle.publish(self.client_name)
 

@@ -12,6 +12,16 @@ def get_childnode(node):
     return childs
 
 
+def print_subscribe_all(node, parent_name):
+    for child in node.childNodes:
+        if type(child) == xml.dom.minidom.Element:
+            print_subscribe_all(child, "{}.{}".format(
+                parent_name, child.tagName))
+            if len(get_childnode(child)) == 0:
+                file.write("        self{}.{}.subscribe()\n".format(
+                    parent_name, child.tagName))
+
+
 def parse_node(node, parent):
     # Go through all childs in tree
     for n in node.childNodes:
@@ -133,6 +143,12 @@ def parse_node(node, parent):
             file.write("\n")
 
             if parent == None:
+
+                file.write("    def subscribe_all(self):\n")
+
+                print_subscribe_all(n, "")
+
+                file.write("\n")
                 file.write("    def get_message_to_send(self):\n")
                 file.write("        return self.message_to_send\n")
 
