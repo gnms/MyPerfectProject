@@ -12,6 +12,8 @@ class override_signal():
         self.signa_name = name
         self.input = None
         self.current_value = ""
+        self.override_value = ""
+        self.is_dirty = False  # To know when to send data to server
 
     def get_name(self):
         return self.signa_name
@@ -29,11 +31,29 @@ class override_signal():
             self.button.config(relief="sunken", text="On")
             self.input.config(bg="white")
 
+        self.is_dirty = True
+
     def set_payload(self, payload):
         self.current_value.config(state="normal")
         self.current_value.delete(0, tkinter.END)
         self.current_value.insert(0, "{}".format(payload))
         self.current_value.config(state="disable")
+
+    def get_override(self):
+        payload = None
+        if self.is_dirty and self.button.config('text')[-1] == 'Off':
+            payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
+                self.signa_name, "normal", self.input.get())
+        if self.is_dirty and self.button.config('text')[-1] == 'On':
+            payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
+                self.signa_name, "override", self.input.get())
+
+        self.is_dirty = False
+
+        return payload
+
+    def update_value(self):
+        self.is_dirty = True
 
 
 class panel_signal_mgr_gui(Thread):
@@ -77,6 +97,10 @@ class panel_signal_mgr_gui(Thread):
         self.signal_list[index].toogle()
         pass
 
+    def on_update(self, index):
+        self.signal_list[index].update_value()
+        pass
+
     def add_script(self, signal, index):
         name = signal.get_name()
         signal_frame = tkinter.Frame(self.main_frame)
@@ -85,6 +109,9 @@ class panel_signal_mgr_gui(Thread):
         signal_lbl = tkinter.Label(
             signal_frame, text=name)
         signal_lbl.pack(side=tkinter.LEFT)
+        update_btn = tkinter.Button(
+            signal_frame, text="Update", command=lambda: self.on_update(index))
+        update_btn.pack(side=tkinter.RIGHT)
         override_btn = tkinter.Button(
             signal_frame, text="Off", command=lambda: self.on_override(index))
         override_btn.pack(side=tkinter.RIGHT)
@@ -122,6 +149,25 @@ class panel_signal_mgr_gui(Thread):
         self.lock.acquire(True)
         self.signal_dict[topic].set_payload(payload)
         self.lock.release()
+
+    def get_override(self):
+        all_message = None
+        self.lock.acquire(True)
+        for signal in self.signal_list:
+            message = signal.get_override()
+            if message != None:
+                if all_message == None:
+                    all_message = "{}".format(message)
+                else:
+                    all_message = "{},{}".format(all_message, message)
+
+            if all_message != None and len(all_message) > 900:
+                break
+
+        self.lock.release()
+        if all_message != None:
+            all_message = "[{}]".format(all_message)
+        return all_message
 
 
 if __name__ == '__main__':

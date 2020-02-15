@@ -50,8 +50,8 @@ class mqtt_client():
         self.send_message_to_server()
         while True:
             # self._log.info('Client {} wait for data'.format(self.client_name))
-            data = self.socket.recv(3).decode("utf-8")
-            msg_size = int(data)
+            size_in_header = self.socket.recv(3).decode("utf-8")
+            msg_size = int(size_in_header)
             # data = self.socket.recv(msg_size).decode("utf-8")
             read_data = 0
             data = ""
