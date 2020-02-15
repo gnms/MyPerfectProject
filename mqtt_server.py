@@ -58,7 +58,7 @@ class mqtt_server(object):
                     while read_data < msg_size:
                         data = data + \
                             client.recv_msg(msg_size-read_data).decode("utf-8")
-                        read_data = len(data)
+                        read_data = len(data.encode())
                         if read_data < msg_size:
                             self._log.info('Client {} MOREEEEEE'.format(
                                 client.client_id))
