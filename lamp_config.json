@@ -1,0 +1,20 @@
+[
+  {
+    "name": "bedroom",
+    "code": "1234",
+    "night": "yes",
+    "mornings": {
+      "workday": "no",
+      "other": "yes"
+    }
+  },
+  {
+    "name": "kitchen",
+    "code": "1234",
+    "night": "yes",
+    "mornings": {
+      "workday": "yes",
+      "other": "yes"
+    }
+  }
+]

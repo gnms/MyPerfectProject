@@ -3,6 +3,7 @@ from enum import Enum
 import threading
 from datetime import datetime, timedelta
 from dateutil import tz
+import time
 NYC = tz.gettz('Europe/Stockholm')
 
 
@@ -25,6 +26,10 @@ class client_time(mqtt_client):
         self.getTime()
         self.timer = None
 
+        if __debug__ != False:
+            self.timer = threading.Timer(1, self.update_time)
+            self.timer.start()
+
     # def setup(self):
     #     self.mqtt_topic.simulation.connected.subscribe()
     #     self.mqtt_topic.simulation.disconnected.subscribe()
@@ -45,7 +50,7 @@ class client_time(mqtt_client):
         # Check if times in not running
         if self.timer == None and self.is_all_clients_idle():
             if self.state == CLIENT_TIME_STATES.RUNNING:
-                self.update_time()
+                self.update_time_sim()
 
     def simulation_idle(self, client_name):
         self.active_clients[client_name] = CLIENT_STATES.IDLE
@@ -53,7 +58,7 @@ class client_time(mqtt_client):
         # Check if times in not running
         if self.timer == None and self.is_all_clients_idle():
             if self.state == CLIENT_TIME_STATES.RUNNING:
-                self.update_time()
+                self.update_time_sim()
 
     def environment_date_time(self, time):
         if self.state == CLIENT_TIME_STATES.STOPED:
@@ -62,7 +67,7 @@ class client_time(mqtt_client):
     def simulation_started(self, started):
         if self.state == CLIENT_TIME_STATES.STOPED and started:
             self.state = CLIENT_TIME_STATES.RUNNING
-            self.timer = threading.Timer(1/self.scale, self.update_time)
+            self.timer = threading.Timer(1/self.scale, self.update_time_sim)
             self.timer.start()
             self._log.info('STARTED')
 
@@ -79,7 +84,7 @@ class client_time(mqtt_client):
             if self.timer != None:
                 self.timer.cancel()
                 self.timer = None
-            self.timer = threading.Timer(1/self.scale, self.update_time)
+            self.timer = threading.Timer(1/self.scale, self.update_time_sim)
             self.timer.start()
         self._log.info('SPEED')
 
@@ -103,13 +108,13 @@ class client_time(mqtt_client):
         if name_of_client in self.active_clients:
             del self.active_clients[name_of_client]
 
-    def update_time(self):
+    def update_time_sim(self):
         if self.is_all_clients_idle():
             # set all to in progress
             for client_name in self.active_clients:
                 self.active_clients[client_name] = CLIENT_STATES.IN_PROGRESS
 
-            self.timer = threading.Timer(1/self.scale, self.update_time)
+            self.timer = threading.Timer(1/self.scale, self.update_time_sim)
             self.timer.start()
             #self._log.info('New Time = {}'.format(self.simulation_time))
             self.step_milliseconds(60000)
@@ -117,6 +122,13 @@ class client_time(mqtt_client):
             self.send_message_to_server()
         else:
             self.timer = None
+
+    def update_time(self):
+        while True:
+            self.getTime()
+            self.mqtt_topic.environment.date_time.publish(self.simulation_time)
+            self.send_message_to_server()
+            time.sleep(1)
 
     def is_all_clients_idle(self):
         for client_name in self.active_clients:

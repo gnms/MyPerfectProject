@@ -91,8 +91,10 @@ def parse_node(node, parent):
                 file.write(
                     "        message_to_send = '{}:{}'.format(topic_str, message)\n")
                 file.write(
-                    "        message_to_send = str(len(message_to_send.encode())).rjust(\n")
-                file.write("           3, '0') + message_to_send\n")
+                    "        if __debug__ == False:\n")
+                file.write(
+                    "            message_to_send = str(len(message_to_send.encode())).rjust(\n")
+                file.write("               3, '0') + message_to_send\n")
 
                 file.write("        return message_to_send\n")
 

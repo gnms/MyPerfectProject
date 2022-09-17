@@ -28,8 +28,9 @@ class mqtt_topic_connected:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, client_name):
@@ -79,8 +80,9 @@ class mqtt_topic_disconnected:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, client_name):
@@ -130,8 +132,9 @@ class mqtt_topic_idle:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, client_name):
@@ -174,8 +177,9 @@ class mqtt_topic_verbose:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self):
@@ -225,8 +229,9 @@ class mqtt_topic_started:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, status):
@@ -276,8 +281,9 @@ class mqtt_topic_speed:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, scale):
@@ -346,8 +352,9 @@ class mqtt_topic_date_time:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, time):
@@ -397,8 +404,9 @@ class mqtt_topic_is_dark_outside:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, state):
@@ -463,8 +471,9 @@ class mqtt_topic_outdoor_light:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, light_value):
@@ -514,8 +523,9 @@ class mqtt_topic_sun_angle:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_angle):
@@ -565,8 +575,9 @@ class mqtt_topic_sun_noon:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_noon):
@@ -616,8 +627,9 @@ class mqtt_topic_sun_dawn:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_dawn):
@@ -667,8 +679,9 @@ class mqtt_topic_sun_dusk:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_dusk):
@@ -718,8 +731,9 @@ class mqtt_topic_sun_daylight:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_daylight):
@@ -769,8 +783,9 @@ class mqtt_topic_cloude:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, cloude):
@@ -840,8 +855,9 @@ class mqtt_topic_special_day:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, name_on_day):
@@ -891,8 +907,9 @@ class mqtt_topic_name_of_day:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, name_of_day):
@@ -942,8 +959,9 @@ class mqtt_topic_name_day:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, name_day):
@@ -993,8 +1011,9 @@ class mqtt_topic_red_day:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, red_day):
@@ -1044,8 +1063,9 @@ class mqtt_topic_working_day:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, working_day):
@@ -1115,8 +1135,9 @@ class mqtt_topic_is_awake:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, is_awake):
@@ -1178,8 +1199,9 @@ class mqtt_topic_lamp_state:
         else:
             topic_str = topic.topic
         message_to_send = '{}:{}'.format(topic_str, message)
-        message_to_send = str(len(message_to_send.encode())).rjust(
-           3, '0') + message_to_send
+        if __debug__ == False:
+            message_to_send = str(len(message_to_send.encode())).rjust(
+               3, '0') + message_to_send
         return message_to_send
 
     def publish(self, lamp_state):
