@@ -1,38 +1,50 @@
 from mqtt_topic import time_to_string
 from mqtt_client import mqtt_client
-from astral import Astral
+from astral.location import Location, LocationInfo
+from astral.sun import sun
 import numpy as np
 import pyowm
+from datetime import datetime
+from zoneinfo import ZoneInfo # Python 3.9
 
 
 class sensor_daylight(mqtt_client):
     def __init__(self):
         mqtt_client.__init__(self, "SENSOR_LIGHT")
-        self.astral = Astral()
-        self.astral.solar_depression = 'civil'
+        #self.astral = Astral()
+        #self.astral.solar_depression = 'civil'
 
-        self.city = self.astral["Stockholm"]
+        #self.city = self.astral["Stockholm"]
+        self.city =  LocationInfo("Stockholm", "Sweden", "Europe/Stockholm", 59.3, 15.2)
 
         self.sun_angle_array = [-27, -7, -4, -3, 2, 5, 10, 70]
         self.daylight_sensor_value = [
             706429, 706429, 680000, 653996, 47542, 4707, 896, 56]
 
         owm = pyowm.OWM('ad0fb07124008d74ebe6e3587b8cfbd1')
-        self.sf = owm.weather_at_place('Garphyttan, SE')
+        mgr = owm.weather_manager()
+        self.sf = mgr.weather_at_place('Garphyttan, SE')
 
     def environment_date_time(self, time):
 
-        sun = self.city.sun(date=time, local=True)
-        solar_none = sun['noon']
-        solar_dawn = sun['dawn']
-        solar_dusk = sun['dusk']
-        astral_day_light = self.city.daylight(time)
-        solar_day_light = (
-            astral_day_light[1] - astral_day_light[0]).seconds/60/60
+        #sun = self.city.sun(date=time, local=True)
+        s = sun(self.city.observer, date=time)
+        solar_none = s['noon']
+        solar_dawn = s['dawn']
+        solar_dusk = s['dusk']
+        solar_sunrise = s['sunrise']
+        solar_sunset = s['sunset']
+        #astral_day_light = self.city.daylight(time)
+        #astral_day_light = (solar_sunset-solar_sunrise)
+        solar_day_light = (solar_sunset-solar_sunrise).seconds/3600
 
-        weather = self.sf.get_weather()
-        sun_angle = self.city.solar_elevation(time)
-        cloude = weather.get_clouds()
+
+        #sun_angle = Location(self.city).solar_azimuth(time)
+        sun_angle = Location(self.city).solar_elevation(time)
+        #weather = self.sf.get_weather()
+        #sun_angle = self.city.solar_elevation(time)
+
+        cloude = self.sf.weather.clouds
         outdoor_light = self.get_light_from_sun_angle(sun_angle)
         # self._log.info('Elevation = {}, daylight = {}, cloude = {}, solar_none = {}, solar_dawn = {}, solar_dusk = {}, solar_day_light = {}'.format(
         #     sun_angle, outdoor_light, cloude, solar_none, time_to_string(solar_dawn), time_to_string(solar_dusk), solar_day_light))

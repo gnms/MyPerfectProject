@@ -26,7 +26,7 @@ class client_time(mqtt_client):
         self.getTime()
         self.timer = None
 
-        if __debug__ != False:
+        if __debug__ != True:
             self.timer = threading.Timer(1, self.update_time)
             self.timer.start()
 

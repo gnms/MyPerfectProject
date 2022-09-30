@@ -68,10 +68,11 @@ class mqtt_server(object):
                         # Set the response to echo back the recieved data
                         # split to topic and message "topt:msg"
                         data_Str = data
-                        delimiter_pos = data_Str.find(':')
+                        result = re.search(r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data_Str)
+                        groups = result.groups()
 
-                        topic = data_Str[:delimiter_pos]
-                        pyaload = data_Str[delimiter_pos+1:]
+                        topic = groups[0]
+                        pyaload = groups[2]
 
                         if topic == "subscribe":
                             self._log.info(

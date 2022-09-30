@@ -1,5 +1,6 @@
 from datetime import datetime
 from threading import Lock
+import re
 def string_to_time(timeStr):
     return datetime.strptime(timeStr, '%Y-%m-%d %H:%M:%S.%f')
 def time_to_string(_time):
@@ -22,13 +23,13 @@ class mqtt_topic_connected:
     def set_payload(self, client_name):
         self.payload = client_name
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -37,6 +38,13 @@ class mqtt_topic_connected:
         self.lock.acquire()
         message = (client_name)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -74,13 +82,13 @@ class mqtt_topic_disconnected:
     def set_payload(self, client_name):
         self.payload = client_name
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -89,6 +97,13 @@ class mqtt_topic_disconnected:
         self.lock.acquire()
         message = (client_name)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -126,13 +141,13 @@ class mqtt_topic_idle:
     def set_payload(self, client_name):
         self.payload = client_name
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -141,6 +156,13 @@ class mqtt_topic_idle:
         self.lock.acquire()
         message = (client_name)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -171,13 +193,13 @@ class mqtt_topic_verbose:
         self.topic = 'simulation/verbose'
         self.lock = lock
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -186,6 +208,13 @@ class mqtt_topic_verbose:
         self.lock.acquire()
         message = ''
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -223,13 +252,13 @@ class mqtt_topic_started:
     def set_payload(self, status):
         self.payload = status
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -238,6 +267,13 @@ class mqtt_topic_started:
         self.lock.acquire()
         message = (status)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -275,13 +311,13 @@ class mqtt_topic_speed:
     def set_payload(self, scale):
         self.payload = scale
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -290,6 +326,13 @@ class mqtt_topic_speed:
         self.lock.acquire()
         message = (scale)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -346,13 +389,13 @@ class mqtt_topic_date_time:
     def set_payload(self, time):
         self.payload = time
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -361,6 +404,13 @@ class mqtt_topic_date_time:
         self.lock.acquire()
         message = time_to_string(time)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -398,13 +448,13 @@ class mqtt_topic_is_dark_outside:
     def set_payload(self, state):
         self.payload = state
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -413,6 +463,13 @@ class mqtt_topic_is_dark_outside:
         self.lock.acquire()
         message = (state)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -465,13 +522,13 @@ class mqtt_topic_outdoor_light:
     def set_payload(self, light_value):
         self.payload = light_value
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -480,6 +537,13 @@ class mqtt_topic_outdoor_light:
         self.lock.acquire()
         message = (light_value)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -517,13 +581,13 @@ class mqtt_topic_sun_angle:
     def set_payload(self, sun_angle):
         self.payload = sun_angle
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -532,6 +596,13 @@ class mqtt_topic_sun_angle:
         self.lock.acquire()
         message = (sun_angle)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -569,13 +640,13 @@ class mqtt_topic_sun_noon:
     def set_payload(self, sun_noon):
         self.payload = sun_noon
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -584,6 +655,13 @@ class mqtt_topic_sun_noon:
         self.lock.acquire()
         message = time_to_string(sun_noon)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -621,13 +699,13 @@ class mqtt_topic_sun_dawn:
     def set_payload(self, sun_dawn):
         self.payload = sun_dawn
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -636,6 +714,13 @@ class mqtt_topic_sun_dawn:
         self.lock.acquire()
         message = time_to_string(sun_dawn)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -673,13 +758,13 @@ class mqtt_topic_sun_dusk:
     def set_payload(self, sun_dusk):
         self.payload = sun_dusk
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -688,6 +773,13 @@ class mqtt_topic_sun_dusk:
         self.lock.acquire()
         message = time_to_string(sun_dusk)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -725,13 +817,13 @@ class mqtt_topic_sun_daylight:
     def set_payload(self, sun_daylight):
         self.payload = sun_daylight
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -740,6 +832,13 @@ class mqtt_topic_sun_daylight:
         self.lock.acquire()
         message = (sun_daylight)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -777,13 +876,13 @@ class mqtt_topic_cloude:
     def set_payload(self, cloude):
         self.payload = cloude
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -792,6 +891,13 @@ class mqtt_topic_cloude:
         self.lock.acquire()
         message = (cloude)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -849,13 +955,13 @@ class mqtt_topic_special_day:
     def set_payload(self, name_on_day):
         self.payload = name_on_day
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -864,6 +970,13 @@ class mqtt_topic_special_day:
         self.lock.acquire()
         message = (name_on_day)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -901,13 +1014,13 @@ class mqtt_topic_name_of_day:
     def set_payload(self, name_of_day):
         self.payload = name_of_day
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -916,6 +1029,13 @@ class mqtt_topic_name_of_day:
         self.lock.acquire()
         message = (name_of_day)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -953,13 +1073,13 @@ class mqtt_topic_name_day:
     def set_payload(self, name_day):
         self.payload = name_day
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -968,6 +1088,13 @@ class mqtt_topic_name_day:
         self.lock.acquire()
         message = (name_day)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1005,13 +1132,13 @@ class mqtt_topic_red_day:
     def set_payload(self, red_day):
         self.payload = red_day
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -1020,6 +1147,13 @@ class mqtt_topic_red_day:
         self.lock.acquire()
         message = (red_day)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1057,13 +1191,13 @@ class mqtt_topic_working_day:
     def set_payload(self, working_day):
         self.payload = working_day
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -1072,6 +1206,13 @@ class mqtt_topic_working_day:
         self.lock.acquire()
         message = (working_day)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1129,13 +1270,13 @@ class mqtt_topic_is_awake:
     def set_payload(self, is_awake):
         self.payload = is_awake
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -1144,6 +1285,13 @@ class mqtt_topic_is_awake:
         self.lock.acquire()
         message = (is_awake)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1193,13 +1341,13 @@ class mqtt_topic_lamp_state:
     def set_payload(self, lamp_state):
         self.payload = lamp_state
 
-    def create_message(self, topic, message):
+    def create_message(self, topic, message, retain=""):
         if isinstance(topic, str):
             topic_str = topic
         else:
             topic_str = topic.topic
-        message_to_send = '{}:{}'.format(topic_str, message)
-        if __debug__ == False:
+        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)
+        if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
                3, '0') + message_to_send
         return message_to_send
@@ -1208,6 +1356,13 @@ class mqtt_topic_lamp_state:
         self.lock.acquire()
         message = (lamp_state)
         self.message_to_send.append(self.create_message(self.topic, message))
+        self.lock.release()
+
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
