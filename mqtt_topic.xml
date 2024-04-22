@@ -13,7 +13,7 @@
 </environment>
 <sensors>
     <outdoor_light message="light_value" type="float"/>
-    <sun_angle message="sun_angle" type="float"/>
+    <sun_angle message="sun_angle" type="float" />
     <sun_noon message="sun_noon" type="date_time"/>
     <sun_dawn message="sun_dawn" type="date_time"/>
     <sun_dusk message="sun_dusk" type="date_time"/>
@@ -23,7 +23,7 @@
 
 <day_info>
     <special_day message="name_on_day" type="str"/>
-    <name_of_day message="name_of_day" type="str"/>
+    <name_of_day message="name_of_day" type="str" mqtt_disc="true"/>
     <name_day message="name_day" type="str"/>
     <red_day message="red_day" type="bool"/>
     <working_day message="working_day" type="bool"/>

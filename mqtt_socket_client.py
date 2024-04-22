@@ -26,7 +26,7 @@ class mqtt_socket_client:
         else:
             topic_str = topic.get_topic()
 
-        message_to_send = '{}:{}'.format(topic_str, message)
+        message_to_send = '{}::{}'.format(topic_str, message)
 
         if topic_str in self.topic_list:
 

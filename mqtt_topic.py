@@ -1,11 +1,13 @@
 from datetime import datetime
 from threading import Lock
+
+
 def string_to_time(timeStr):
     return datetime.strptime(timeStr, '%Y-%m-%d %H:%M:%S.%f')
+
+
 def time_to_string(_time):
     return _time.strftime('%Y-%m-%d %H:%M:%S.%f')
-
-
 
 
 class mqtt_topic_connected:
@@ -30,7 +32,7 @@ class mqtt_topic_connected:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, client_name):
@@ -41,23 +43,23 @@ class mqtt_topic_connected:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_disconnected:
@@ -82,7 +84,7 @@ class mqtt_topic_disconnected:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, client_name):
@@ -93,23 +95,23 @@ class mqtt_topic_disconnected:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_idle:
@@ -134,7 +136,7 @@ class mqtt_topic_idle:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, client_name):
@@ -145,23 +147,23 @@ class mqtt_topic_idle:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_verbose:
@@ -179,7 +181,7 @@ class mqtt_topic_verbose:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self):
@@ -190,23 +192,23 @@ class mqtt_topic_verbose:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_started:
@@ -231,7 +233,7 @@ class mqtt_topic_started:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, status):
@@ -242,23 +244,23 @@ class mqtt_topic_started:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_speed:
@@ -283,7 +285,7 @@ class mqtt_topic_speed:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, scale):
@@ -294,23 +296,23 @@ class mqtt_topic_speed:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_simulation:
@@ -319,17 +321,18 @@ class mqtt_topic_simulation:
         message_dictonary['simulation'] = self
         self.topic = 'simulation'
         self.lock = lock
-        self.connected = mqtt_topic_connected(self.message_to_send, message_dictonary, self.lock)
-        self.disconnected = mqtt_topic_disconnected(self.message_to_send, message_dictonary, self.lock)
-        self.idle = mqtt_topic_idle(self.message_to_send, message_dictonary, self.lock)
-        self.verbose = mqtt_topic_verbose(self.message_to_send, message_dictonary, self.lock)
-        self.started = mqtt_topic_started(self.message_to_send, message_dictonary, self.lock)
-        self.speed = mqtt_topic_speed(self.message_to_send, message_dictonary, self.lock)
-
-
-
-
-
+        self.connected = mqtt_topic_connected(
+            self.message_to_send, message_dictonary, self.lock)
+        self.disconnected = mqtt_topic_disconnected(
+            self.message_to_send, message_dictonary, self.lock)
+        self.idle = mqtt_topic_idle(
+            self.message_to_send, message_dictonary, self.lock)
+        self.verbose = mqtt_topic_verbose(
+            self.message_to_send, message_dictonary, self.lock)
+        self.started = mqtt_topic_started(
+            self.message_to_send, message_dictonary, self.lock)
+        self.speed = mqtt_topic_speed(
+            self.message_to_send, message_dictonary, self.lock)
 
 
 class mqtt_topic_date_time:
@@ -354,7 +357,7 @@ class mqtt_topic_date_time:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, time):
@@ -365,23 +368,23 @@ class mqtt_topic_date_time:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_is_dark_outside:
@@ -406,7 +409,7 @@ class mqtt_topic_is_dark_outside:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, state):
@@ -417,23 +420,23 @@ class mqtt_topic_is_dark_outside:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_environment:
@@ -442,13 +445,10 @@ class mqtt_topic_environment:
         message_dictonary['environment'] = self
         self.topic = 'environment'
         self.lock = lock
-        self.date_time = mqtt_topic_date_time(self.message_to_send, message_dictonary, self.lock)
-        self.is_dark_outside = mqtt_topic_is_dark_outside(self.message_to_send, message_dictonary, self.lock)
-
-
-
-
-
+        self.date_time = mqtt_topic_date_time(
+            self.message_to_send, message_dictonary, self.lock)
+        self.is_dark_outside = mqtt_topic_is_dark_outside(
+            self.message_to_send, message_dictonary, self.lock)
 
 
 class mqtt_topic_outdoor_light:
@@ -473,7 +473,7 @@ class mqtt_topic_outdoor_light:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, light_value):
@@ -484,23 +484,23 @@ class mqtt_topic_outdoor_light:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_sun_angle:
@@ -525,7 +525,7 @@ class mqtt_topic_sun_angle:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_angle):
@@ -536,23 +536,23 @@ class mqtt_topic_sun_angle:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_sun_noon:
@@ -577,7 +577,7 @@ class mqtt_topic_sun_noon:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_noon):
@@ -588,23 +588,23 @@ class mqtt_topic_sun_noon:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_sun_dawn:
@@ -629,7 +629,7 @@ class mqtt_topic_sun_dawn:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_dawn):
@@ -640,23 +640,23 @@ class mqtt_topic_sun_dawn:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_sun_dusk:
@@ -681,7 +681,7 @@ class mqtt_topic_sun_dusk:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_dusk):
@@ -692,23 +692,23 @@ class mqtt_topic_sun_dusk:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_sun_daylight:
@@ -733,7 +733,7 @@ class mqtt_topic_sun_daylight:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, sun_daylight):
@@ -744,23 +744,23 @@ class mqtt_topic_sun_daylight:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_cloude:
@@ -785,7 +785,7 @@ class mqtt_topic_cloude:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, cloude):
@@ -796,23 +796,23 @@ class mqtt_topic_cloude:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_sensors:
@@ -821,18 +821,20 @@ class mqtt_topic_sensors:
         message_dictonary['sensors'] = self
         self.topic = 'sensors'
         self.lock = lock
-        self.outdoor_light = mqtt_topic_outdoor_light(self.message_to_send, message_dictonary, self.lock)
-        self.sun_angle = mqtt_topic_sun_angle(self.message_to_send, message_dictonary, self.lock)
-        self.sun_noon = mqtt_topic_sun_noon(self.message_to_send, message_dictonary, self.lock)
-        self.sun_dawn = mqtt_topic_sun_dawn(self.message_to_send, message_dictonary, self.lock)
-        self.sun_dusk = mqtt_topic_sun_dusk(self.message_to_send, message_dictonary, self.lock)
-        self.sun_daylight = mqtt_topic_sun_daylight(self.message_to_send, message_dictonary, self.lock)
-        self.cloude = mqtt_topic_cloude(self.message_to_send, message_dictonary, self.lock)
-
-
-
-
-
+        self.outdoor_light = mqtt_topic_outdoor_light(
+            self.message_to_send, message_dictonary, self.lock)
+        self.sun_angle = mqtt_topic_sun_angle(
+            self.message_to_send, message_dictonary, self.lock)
+        self.sun_noon = mqtt_topic_sun_noon(
+            self.message_to_send, message_dictonary, self.lock)
+        self.sun_dawn = mqtt_topic_sun_dawn(
+            self.message_to_send, message_dictonary, self.lock)
+        self.sun_dusk = mqtt_topic_sun_dusk(
+            self.message_to_send, message_dictonary, self.lock)
+        self.sun_daylight = mqtt_topic_sun_daylight(
+            self.message_to_send, message_dictonary, self.lock)
+        self.cloude = mqtt_topic_cloude(
+            self.message_to_send, message_dictonary, self.lock)
 
 
 class mqtt_topic_special_day:
@@ -857,7 +859,7 @@ class mqtt_topic_special_day:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, name_on_day):
@@ -868,23 +870,23 @@ class mqtt_topic_special_day:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_name_of_day:
@@ -909,7 +911,7 @@ class mqtt_topic_name_of_day:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, name_of_day):
@@ -920,23 +922,23 @@ class mqtt_topic_name_of_day:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_name_day:
@@ -961,7 +963,7 @@ class mqtt_topic_name_day:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, name_day):
@@ -972,23 +974,23 @@ class mqtt_topic_name_day:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_red_day:
@@ -1013,7 +1015,7 @@ class mqtt_topic_red_day:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, red_day):
@@ -1024,23 +1026,23 @@ class mqtt_topic_red_day:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_working_day:
@@ -1065,7 +1067,7 @@ class mqtt_topic_working_day:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, working_day):
@@ -1076,23 +1078,23 @@ class mqtt_topic_working_day:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_day_info:
@@ -1101,18 +1103,16 @@ class mqtt_topic_day_info:
         message_dictonary['day_info'] = self
         self.topic = 'day_info'
         self.lock = lock
-        self.special_day = mqtt_topic_special_day(self.message_to_send, message_dictonary, self.lock)
-        self.name_of_day = mqtt_topic_name_of_day(self.message_to_send, message_dictonary, self.lock)
-        self.name_day = mqtt_topic_name_day(self.message_to_send, message_dictonary, self.lock)
-        self.red_day = mqtt_topic_red_day(self.message_to_send, message_dictonary, self.lock)
-        self.working_day = mqtt_topic_working_day(self.message_to_send, message_dictonary, self.lock)
-
-
-
-
-
-
-
+        self.special_day = mqtt_topic_special_day(
+            self.message_to_send, message_dictonary, self.lock)
+        self.name_of_day = mqtt_topic_name_of_day(
+            self.message_to_send, message_dictonary, self.lock)
+        self.name_day = mqtt_topic_name_day(
+            self.message_to_send, message_dictonary, self.lock)
+        self.red_day = mqtt_topic_red_day(
+            self.message_to_send, message_dictonary, self.lock)
+        self.working_day = mqtt_topic_working_day(
+            self.message_to_send, message_dictonary, self.lock)
 
 
 class mqtt_topic_is_awake:
@@ -1137,7 +1137,7 @@ class mqtt_topic_is_awake:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, is_awake):
@@ -1148,23 +1148,23 @@ class mqtt_topic_is_awake:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_human:
@@ -1173,10 +1173,8 @@ class mqtt_topic_human:
         message_dictonary['house/human'] = self
         self.topic = 'house/human'
         self.lock = lock
-        self.is_awake = mqtt_topic_is_awake(self.message_to_send, message_dictonary, self.lock)
-
-
-
+        self.is_awake = mqtt_topic_is_awake(
+            self.message_to_send, message_dictonary, self.lock)
 
 
 class mqtt_topic_lamp_state:
@@ -1201,7 +1199,7 @@ class mqtt_topic_lamp_state:
         message_to_send = '{}:{}'.format(topic_str, message)
         if __debug__ == True:
             message_to_send = str(len(message_to_send.encode())).rjust(
-               3, '0') + message_to_send
+                3, '0') + message_to_send
         return message_to_send
 
     def publish(self, lamp_state):
@@ -1212,23 +1210,23 @@ class mqtt_topic_lamp_state:
 
     def subscribe(self):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('subscribe', self.topic))
+        self.message_to_send.append(
+            self.create_message('subscribe', self.topic))
         self.lock.release()
+
     def __eq__(self, other):
         if other == None:
             return False
 
         if type(other) is str:
             other_topic = other
-        else:            other_topic = other.topic
+        else:
+            other_topic = other.topic
 
         if self.topic == other_topic:
             return True
         else:
             return False
-
-
-
 
 
 class mqtt_topic_house:
@@ -1237,11 +1235,10 @@ class mqtt_topic_house:
         message_dictonary['house'] = self
         self.topic = 'house'
         self.lock = lock
-        self.human = mqtt_topic_human(self.message_to_send, message_dictonary, self.lock)
-        self.lamp_state = mqtt_topic_lamp_state(self.message_to_send, message_dictonary, self.lock)
-
-
-
+        self.human = mqtt_topic_human(
+            self.message_to_send, message_dictonary, self.lock)
+        self.lamp_state = mqtt_topic_lamp_state(
+            self.message_to_send, message_dictonary, self.lock)
 
 
 class mqtt_topic_ifd:
@@ -1251,11 +1248,16 @@ class mqtt_topic_ifd:
         lock = Lock()
         self.message_dictonary = message_dictonary
         self.lock = lock
-        self.simulation = mqtt_topic_simulation(self.message_to_send, message_dictonary, self.lock)
-        self.environment = mqtt_topic_environment(self.message_to_send, message_dictonary, self.lock)
-        self.sensors = mqtt_topic_sensors(self.message_to_send, message_dictonary, self.lock)
-        self.day_info = mqtt_topic_day_info(self.message_to_send, message_dictonary, self.lock)
-        self.house = mqtt_topic_house(self.message_to_send, message_dictonary, self.lock)
+        self.simulation = mqtt_topic_simulation(
+            self.message_to_send, message_dictonary, self.lock)
+        self.environment = mqtt_topic_environment(
+            self.message_to_send, message_dictonary, self.lock)
+        self.sensors = mqtt_topic_sensors(
+            self.message_to_send, message_dictonary, self.lock)
+        self.day_info = mqtt_topic_day_info(
+            self.message_to_send, message_dictonary, self.lock)
+        self.house = mqtt_topic_house(
+            self.message_to_send, message_dictonary, self.lock)
 
     def subscribe_all(self):
         self.simulation.connected.subscribe()
@@ -1283,9 +1285,9 @@ class mqtt_topic_ifd:
 
     def get_message_to_send(self):
         return self.message_to_send
+
     def clear_message_to_send(self):
         self.message_to_send.clear()
+
     def get_message(self, message_as_text):
         return self.message_dictonary[message_as_text]
-
-

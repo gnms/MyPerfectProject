@@ -82,14 +82,14 @@ def parse_node(node, parent):
 
                 file.write("\n")
 
-                file.write("    def create_message(self, topic, message):\n")
+                file.write("    def create_message(self, topic, message, retain=\"\"):\n")
                 file.write("        if isinstance(topic, str):\n")
                 file.write("            topic_str = topic\n")
                 file.write("        else:\n")
                 file.write("            topic_str = topic.topic\n")
 
                 file.write(
-                    "        message_to_send = '{}:{}'.format(topic_str, message)\n")
+                    "        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)\n")
                 file.write(
                     "        if __debug__ == True:\n")
                 file.write(
@@ -119,6 +119,23 @@ def parse_node(node, parent):
 
                 file.write("\n")
 
+
+                file.write("    def discovery(self, name):\n")
+                file.write("        self.lock.acquire()\n")
+                file.write("        string = re.sub(r\"\/.{1,}\/\", \"/\", self.topic)\n")
+                file.write(
+                    "        config = \"{\\\"name\\\":\\\"\"+name+\"\\\", \\\"state_topic\\\":\\\"\"+self.topic+\"\\\", \\\"frc_upd\\\":\\\"true\\\"}\"\n")
+                file.write(
+                    "        self.message_to_send.append(self.create_message(\"homeassistant/\"+string+ \"/config\", config, \"Retain\"))\n")
+                file.write("        self.lock.release()\n")
+
+                file.write("\n")
+
+
+
+
+
+
                 file.write("    def subscribe(self):\n")
                 file.write("        self.lock.acquire()\n")
                 file.write(
@@ -139,11 +156,13 @@ def parse_node(node, parent):
                 file.write("        else:\n")
                 file.write("            return False\n")
 
+            # if have child we itterate through all
             for child in childs:
                 file.write("        self.{} = mqtt_topic_{}(self.message_to_send, message_dictonary, self.lock)\n".format(
                     child, child))
             file.write("\n")
 
+            # if it is the root we make some methods 
             if parent == None:
 
                 file.write("    def subscribe_all(self):\n")
@@ -167,6 +186,7 @@ def parse_node(node, parent):
 
 file.write("from datetime import datetime\n")
 file.write("from threading import Lock\n")
+file.write("import re\n")
 file.write("def string_to_time(timeStr):\n")
 file.write("    return datetime.strptime(timeStr, '%Y-%m-%d %H:%M:%S.%f')\n")
 

@@ -22,10 +22,13 @@ class mqtt_client():
         fh.setFormatter(formatter)
         self._log.addHandler(fh)
         self._log.info('Started')
+        self.not_connected = False
         # Connect to own mqtt server or a real one
         if __debug__ == True:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((self.host, self.port))
+            # connected
+            self.not_connected = True
         else:
             self.mqqt_client = mqtt.Client(client_name)
             mqtt_connected = False
@@ -58,6 +61,10 @@ class mqtt_client():
         if __debug__ == True:
             self.mqtt_topic.environment.date_time.subscribe()
             self.mqtt_topic.simulation.verbose.subscribe()
+        else:
+            # have to wait for be connected to broaker
+            while (self.not_connected):
+                time.sleep(1)
         self.setup()
         if self.subscribe_with_method_name:
             for name in self.mqtt_topic.message_dictonary:
@@ -90,9 +97,11 @@ class mqtt_client():
                         self._log.info('Client {} MOREEEEEE'.format(
                             self.client_name))
                 if data:
-                    delimiter_pos = data.find(':')
-                    topic = data[:delimiter_pos]
-                    pyaload = data[delimiter_pos+1:]
+                    result = re.search(
+                        r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data)
+                    groups = result.groups()
+                    topic = groups[0]
+                    pyaload = groups[2]
                     if self.mqtt_topic.simulation.verbose == topic:
                         self.mqtt_topic.simulation.connected.publish(
                             self.client_name)
@@ -136,10 +145,15 @@ class mqtt_client():
             if __debug__ == True:
                 self.send_on_socket(msg)
             else:
-                delimiter_pos = msg.find(':')
-                topic = msg[:delimiter_pos]
-                pyaload = msg[delimiter_pos+1:]
-                self.mqqt_client.publish(topic, pyaload)
+                # we have to parse out if we have some flags that we shall send to mqtt
+                result = re.search(r"(^[^:]{1,}):([^:]{0,}):(.{1,}$)", msg)
+                groups = result.groups()
+                # if we shall send retain
+                if groups[0]:
+                    self.mqqt_client.publish(
+                        groups[0], groups[2], qos=0, retain=True)
+                else:
+                    self.mqqt_client.publish(groups[0], groups[2])
 
         self.mqtt_topic.clear_message_to_send()
 
@@ -149,7 +163,7 @@ class mqtt_client():
     # mqtt callback on new messages
 
     def on_connect(self, client, message, flags, rc):
-        pass
+        self.not_connected = True
 
     def on_message(self, client, userdata, message):
         self.notify_client(message.topic, str(message.payload.decode("utf-8")))
