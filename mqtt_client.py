@@ -3,7 +3,7 @@ import sys
 import logging
 import socket
 import time
-if __debug__ == True:
+if __debug__ != True:
     import paho.mqtt.client as mqtt
 
 
@@ -23,7 +23,7 @@ class mqtt_client():
         self._log.addHandler(fh)
         self._log.info('Started')
         # Connect to own mqtt server or a real one
-        if __debug__ == False:
+        if __debug__ == True:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.connect((self.host, self.port))
         else:
@@ -45,7 +45,7 @@ class mqtt_client():
         self.mqtt_topic = mqtt_topic_ifd()
 
         # not send that we have connected if we not simulate
-        if __debug__ == False:
+        if __debug__ == True:
             self.mqtt_topic.simulation.connected.publish(self.client_name)
 
         self.calback_dictonary = dict()
@@ -55,7 +55,7 @@ class mqtt_client():
     def run(self):
         # we do not have to subscribe for verbose or time
 
-        if __debug__ == False:
+        if __debug__ == True:
             self.mqtt_topic.environment.date_time.subscribe()
             self.mqtt_topic.simulation.verbose.subscribe()
         self.setup()
@@ -68,12 +68,12 @@ class mqtt_client():
                         if callable(callback):
                             self.mqtt_topic.message_dictonary[name].subscribe()
                             self.calback_dictonary[name] = callback
-                            if __debug__ != False:
+                            if __debug__ != True:
                                 self.mqqt_client.subscribe(name)
                 # Method exists and was used.
                 except AttributeError:
                     pass
-        if __debug__ == False:
+        if __debug__ == True:
             self.send_message_to_server()
             while True:
                 # self._log.info('Client {} wait for data'.format(self.client_name))
@@ -123,7 +123,7 @@ class mqtt_client():
                         self.calback_dictonary[topic_str]()
             else:
                 self.handel_messages(topic)
-            if __debug__ == False:
+            if __debug__ == True:
                 if self.mqtt_topic.environment.date_time == topic:
                     self.mqtt_topic.simulation.idle.publish(self.client_name)
 
@@ -133,7 +133,7 @@ class mqtt_client():
     def send_message_to_server(self):
         message_to_send = self.mqtt_topic.get_message_to_send()
         for msg in message_to_send:
-            if __debug__ == False:
+            if __debug__ == True:
                 self.send_on_socket(msg)
             else:
                 delimiter_pos = msg.find(':')
