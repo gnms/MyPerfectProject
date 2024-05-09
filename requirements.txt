@@ -1,7 +1,15 @@
+astral==3.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
+geojson==2.5.0
 idna==3.7
+numpy==1.26.4
 paho-mqtt==2.1.0
+pyowm==3.3.0
+PySocks==1.7.1
+python-dateutil==2.9.0.post0
 regex==2024.4.28
 requests==2.31.0
+setuptools==69.5.1
+six==1.16.0
 urllib3==2.2.1

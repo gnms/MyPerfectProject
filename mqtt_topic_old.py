@@ -40,15 +40,11 @@ class mqtt_topic_connected:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -103,15 +99,11 @@ class mqtt_topic_disconnected:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -166,15 +158,11 @@ class mqtt_topic_idle:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -222,15 +210,11 @@ class mqtt_topic_verbose:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -285,15 +269,11 @@ class mqtt_topic_started:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -348,15 +328,11 @@ class mqtt_topic_speed:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -430,15 +406,11 @@ class mqtt_topic_time_start:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -493,15 +465,11 @@ class mqtt_topic_time_ten_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -556,15 +524,11 @@ class mqtt_topic_time_twenty_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -619,15 +583,11 @@ class mqtt_topic_time_thirty_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -682,15 +642,11 @@ class mqtt_topic_time_fourty_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -747,15 +703,11 @@ class mqtt_topic_value:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -810,15 +762,11 @@ class mqtt_topic_counter:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -905,15 +853,11 @@ class mqtt_topic_time_start:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -968,15 +912,11 @@ class mqtt_topic_time_ten_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1031,15 +971,11 @@ class mqtt_topic_time_twenty_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1094,15 +1030,11 @@ class mqtt_topic_time_thirty_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):
@@ -1157,16 +1089,26 @@ class mqtt_topic_time_fourty_yard:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
+    def discovery(self, name):
+        self.lock.acquire()
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
+        self.lock.release()
+
     def override(self, override, value):
         if override == True:
             override_str = "override"
         else:
-           override_str = "normal"
+            override_str = "normal"
+
         payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
                 self.topic, override_str, value)
+        
         self.lock.acquire()
         self.message_to_send.append(self.create_message('override', payload))
         self.lock.release()
+
 
     def subscribe(self):
         self.lock.acquire()
@@ -1238,15 +1180,11 @@ class mqtt_topic_date_time:
         self.message_to_send.append(self.create_message(self.topic, message))
         self.lock.release()
 
-    def override(self, override, value):
-        if override == True:
-            override_str = "override"
-        else:
-           override_str = "normal"
-        payload = "{{\"name\": \"{}\",\"state\": \"{}\",\"value\": \"{}\" }}".format(
-                self.topic, override_str, value)
+    def discovery(self, name):
         self.lock.acquire()
-        self.message_to_send.append(self.create_message('override', payload))
+        string = re.sub(r"\/.{1,}\/", "/", self.topic)
+        config = "{\"name\":\""+name+"\", \"state_topic\":\""+self.topic+"\", \"frc_upd\":\"true\"}"
+        self.message_to_send.append(self.create_message("homeassistant/"+string+ "/config", config, "Retain"))
         self.lock.release()
 
     def subscribe(self):

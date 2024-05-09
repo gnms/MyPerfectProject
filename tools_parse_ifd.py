@@ -120,21 +120,31 @@ def parse_node(node, parent):
                 file.write("\n")
 
 
-                file.write("    def discovery(self, name):\n")
+                # file.write("    def discovery(self, name):\n")
+                # file.write("        self.lock.acquire()\n")
+                # file.write("        string = re.sub(r\"\/.{1,}\/\", \"/\", self.topic)\n")
+                # file.write(
+                #     "        config = \"{\\\"name\\\":\\\"\"+name+\"\\\", \\\"state_topic\\\":\\\"\"+self.topic+\"\\\", \\\"frc_upd\\\":\\\"true\\\"}\"\n")
+                # file.write(
+                #     "        self.message_to_send.append(self.create_message(\"homeassistant/\"+string+ \"/config\", config, \"Retain\"))\n")
+                # file.write("        self.lock.release()\n")
+
+                # file.write("\n")
+
+
+                file.write("    def override(self, override, value):\n")
+                file.write("        if override == True:\n")
+                file.write("            override_str = \"override\"\n")
+                file.write("        else:\n")
+                file.write("           override_str = \"normal\"\n")
+                file.write("        payload = \"{{\\\"name\\\": \\\"{}\\\",\\\"state\\\": \\\"{}\\\",\\\"value\\\": \\\"{}\\\" }}\".format(\n")
+                file.write("                self.topic, override_str, value)\n")
+                  
                 file.write("        self.lock.acquire()\n")
-                file.write("        string = re.sub(r\"\/.{1,}\/\", \"/\", self.topic)\n")
-                file.write(
-                    "        config = \"{\\\"name\\\":\\\"\"+name+\"\\\", \\\"state_topic\\\":\\\"\"+self.topic+\"\\\", \\\"frc_upd\\\":\\\"true\\\"}\"\n")
-                file.write(
-                    "        self.message_to_send.append(self.create_message(\"homeassistant/\"+string+ \"/config\", config, \"Retain\"))\n")
+                file.write("        self.message_to_send.append(self.create_message('override', payload))\n")
                 file.write("        self.lock.release()\n")
 
                 file.write("\n")
-
-
-
-
-
 
                 file.write("    def subscribe(self):\n")
                 file.write("        self.lock.acquire()\n")

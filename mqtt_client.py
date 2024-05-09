@@ -3,6 +3,7 @@ import sys
 import logging
 import socket
 import time
+import re
 if __debug__ != True:
     import paho.mqtt.client as mqtt
 
@@ -55,6 +56,9 @@ class mqtt_client():
 
         self.subscribe_with_method_name = True
 
+        ## Regex to validate the incoming data, teh data shall always start with 3 digits that is the size of the message
+        self.validate_size = re.compile("^[0-9]{3}$")
+
     def run(self):
         # we do not have to subscribe for verbose or time
 
@@ -85,29 +89,34 @@ class mqtt_client():
             while True:
                 # self._log.info('Client {} wait for data'.format(self.client_name))
                 size_in_header = self.socket.recv(3).decode("utf-8")
-                msg_size = int(size_in_header)
-                # data = self.socket.recv(msg_size).decode("utf-8")
-                read_data = 0
-                data = ""
-                while read_data < msg_size:
-                    data = data + \
-                        self.socket.recv(msg_size-read_data).decode("utf-8")
-                    read_data = len(data.encode())
-                    if read_data < msg_size:
-                        self._log.info('Client {} MOREEEEEE'.format(
-                            self.client_name))
-                if data:
-                    result = re.search(
-                        r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data)
-                    groups = result.groups()
-                    topic = groups[0]
-                    pyaload = groups[2]
-                    if self.mqtt_topic.simulation.verbose == topic:
-                        self.mqtt_topic.simulation.connected.publish(
-                            self.client_name)
-                        self.send_message_to_server()
-                    else:
-                        self.notify_client(topic, pyaload)
+
+                if self.validate_size.match(size_in_header):
+                    msg_size = int(size_in_header)
+                    # data = self.socket.recv(msg_size).decode("utf-8")
+                    read_data = 0
+                    data = ""
+                    while read_data < msg_size:
+                        data = data + \
+                            self.socket.recv(msg_size-read_data).decode("utf-8")
+                        read_data = len(data.encode())
+                        if read_data < msg_size:
+                            self._log.info('Client {} MOREEEEEE'.format(
+                                self.client_name))
+                    if data:
+                        result = re.search(
+                            r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data)
+                        groups = result.groups()
+                        topic = groups[0]
+                        pyaload = groups[2]
+                        if self.mqtt_topic.simulation.verbose == topic:
+                            self.mqtt_topic.simulation.connected.publish(
+                                self.client_name)
+                            self.send_message_to_server()
+                        else:
+                            self.notify_client(topic, pyaload)
+                else:
+                    self._log.info('Client {} not correct size'.format(
+                                self.client_name))
         else:
             self.mqqt_client.loop_start()  # start the loop
             while True:
@@ -143,6 +152,8 @@ class mqtt_client():
         message_to_send = self.mqtt_topic.get_message_to_send()
         for msg in message_to_send:
             if __debug__ == True:
+
+                self._log.info('Send {} new data'.format(msg))
                 self.send_on_socket(msg)
             else:
                 # we have to parse out if we have some flags that we shall send to mqtt

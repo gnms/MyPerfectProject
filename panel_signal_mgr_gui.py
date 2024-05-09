@@ -14,6 +14,7 @@ class override_signal():
         self.current_value = ""
         self.override_value = ""
         self.is_dirty = False  # To know when to send data to server
+        self.to_send = False  # To know when to publish data
 
     def get_name(self):
         return self.signa_name
@@ -54,6 +55,10 @@ class override_signal():
 
     def update_value(self):
         self.is_dirty = True
+
+    
+    def send_value(self):
+        self.to_send = True
 
 
 class panel_signal_mgr_gui(Thread):
@@ -101,6 +106,11 @@ class panel_signal_mgr_gui(Thread):
         self.signal_list[index].update_value()
         pass
 
+
+    def on_send(self, index):
+        self.signal_list[index].send_value()
+        pass
+
     def add_script(self, signal, index):
         name = signal.get_name()
         signal_frame = tkinter.Frame(self.main_frame)
@@ -109,6 +119,9 @@ class panel_signal_mgr_gui(Thread):
         signal_lbl = tkinter.Label(
             signal_frame, text=name)
         signal_lbl.pack(side=tkinter.LEFT)
+        send_btn = tkinter.Button(
+            signal_frame, text="Send", command=lambda: self.on_send(index))
+        send_btn.pack(side=tkinter.RIGHT)
         update_btn = tkinter.Button(
             signal_frame, text="Update", command=lambda: self.on_update(index))
         update_btn.pack(side=tkinter.RIGHT)
@@ -151,6 +164,25 @@ class panel_signal_mgr_gui(Thread):
         self.lock.release()
 
     def get_override(self):
+        all_message = None
+        self.lock.acquire(True)
+        for signal in self.signal_list:
+            message = signal.get_override()
+            if message != None:
+                if all_message == None:
+                    all_message = "{}".format(message)
+                else:
+                    all_message = "{},{}".format(all_message, message)
+
+            if all_message != None and len(all_message) > 900:
+                break
+
+        self.lock.release()
+        if all_message != None:
+            all_message = "[{}]".format(all_message)
+        return all_message
+
+    def get_send_message(self):
         all_message = None
         self.lock.acquire(True)
         for signal in self.signal_list:

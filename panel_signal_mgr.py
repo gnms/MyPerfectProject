@@ -15,13 +15,24 @@ class panel_signal_mgr(mqtt_client):
         self.mqtt_topic.subscribe_all()
 
     def handel_messages(self, topic):
+
+        if topic == self.mqtt_topic.io.time_start:
+            pass
         self.gui.update_date(topic.topic, topic.get_payload())
 
         if topic == self.mqtt_topic.environment.date_time:
             # send all override to server
             meassage = self.gui.get_override()
             if meassage != None:
-                message_to_send = '{}:{}'.format("override", meassage)
+                message_to_send = '{}::{}'.format("override", meassage)
+                message_to_send = str(len(message_to_send)).rjust(
+                    3, '0') + message_to_send
+                self.mqtt_topic.message_to_send.append(message_to_send)
+
+            
+            meassage = self.gui.get_send_message()
+            if meassage != None:
+                message_to_send = '{}::{}'.format("override", meassage)
                 message_to_send = str(len(message_to_send)).rjust(
                     3, '0') + message_to_send
                 self.mqtt_topic.message_to_send.append(message_to_send)

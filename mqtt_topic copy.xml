@@ -1,0 +1,37 @@
+<ifd>
+<simulation>
+    <connected message="client_name" type="str"/>
+    <disconnected message="client_name" type="str"/>
+    <idle message="client_name" type="str"/>
+    <verbose />
+    <started message="status" type="bool" text="start:stop"/>
+    <speed message="scale" type="int"/>
+</simulation>
+<environment>
+    <date_time message="time" type="date_time"/>
+    <is_dark_outside message="state" type="bool"/>
+</environment>
+<sensors>
+    <outdoor_light message="light_value" type="float"/>
+    <sun_angle message="sun_angle" type="float" />
+    <sun_noon message="sun_noon" type="date_time"/>
+    <sun_dawn message="sun_dawn" type="date_time"/>
+    <sun_dusk message="sun_dusk" type="date_time"/>
+    <sun_daylight message="sun_daylight" type="float"/>
+    <cloude message="cloude" type="float"/>
+</sensors>
+
+<day_info>
+    <special_day message="name_on_day" type="str"/>
+    <name_of_day message="name_of_day" type="str" mqtt_disc="true"/>
+    <name_day message="name_day" type="str"/>
+    <red_day message="red_day" type="bool"/>
+    <working_day message="working_day" type="bool"/>
+</day_info>
+<house>
+    <human>
+        <is_awake message="is_awake" type="bool"/>
+    </human>
+    <lamp_state message="lamp_state" type="str"/>
+</house>
+</ifd>    

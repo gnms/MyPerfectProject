@@ -1,9 +1,9 @@
 from mqtt_topic import time_to_string
 from mqtt_client import mqtt_client
+from pyowm import OWM
 from astral.location import Location, LocationInfo
 from astral.sun import sun
 import numpy as np
-import pyowm
 from datetime import datetime
 from zoneinfo import ZoneInfo # Python 3.9
 
@@ -21,7 +21,7 @@ class sensor_daylight(mqtt_client):
         self.daylight_sensor_value = [
             706429, 706429, 680000, 653996, 47542, 4707, 896, 56]
 
-        owm = pyowm.OWM('ad0fb07124008d74ebe6e3587b8cfbd1')
+        owm = OWM('ad0fb07124008d74ebe6e3587b8cfbd1')
         mgr = owm.weather_manager()
         self.sf = mgr.weather_at_place('Garphyttan, SE')
 
