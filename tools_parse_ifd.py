@@ -1,208 +1,148 @@
 import xml.dom.minidom
+from plugins import PluginHandler
+import os
+import traceback
+from importlib import util
+from topics_types.parse_topics_types import get_all_topic_typed
 
+# Parse the XML document
 doc = xml.dom.minidom.parse("mqtt_topic.xml")
+
+# Open the output Python file for writing
 file = open("mqtt_topic.py", "w+")
 
 
 def get_childnode(node):
+    """
+    Get all child elements of a given XML node.
+    
+    :param node: XML node
+    :return: List of tag names of child elements
+    """
     childs = []
     for n in node.childNodes:
-        if type(n) == xml.dom.minidom.Element:
+        if isinstance(n, xml.dom.minidom.Element):
             childs.append(n.tagName)
     return childs
 
 
 def print_subscribe_all(node, parent_name):
+    """
+    Recursively print subscribe statements for all child nodes.
+    
+    :param node: XML node
+    :param parent_name: Parent node's name
+    """
     for child in node.childNodes:
-        if type(child) == xml.dom.minidom.Element:
-            print_subscribe_all(child, "{}.{}".format(
-                parent_name, child.tagName))
+        if isinstance(child, xml.dom.minidom.Element):
+            print_subscribe_all(child, f"{parent_name}.{child.tagName}")
             if len(get_childnode(child)) == 0:
-                file.write("        self{}.{}.subscribe()\n".format(
-                    parent_name, child.tagName))
+                file.write(f"        self{parent_name}.{child.tagName}.subscribe()\n")
+
+def print_all_leafs(node, parent_name):
+    """
+    Recursively print subscribe statements for all child nodes.
+    
+    :param node: XML node
+    :param parent_name: Parent node's name
+    """
+    str = ""
+    for child in node.childNodes:
+        if isinstance(child, xml.dom.minidom.Element):
+            if str == "":
+                str = print_all_leafs(child, f"{parent_name}.{child.tagName}")
+            else:
+                    s = print_all_leafs(child, f'{parent_name}.{child.tagName}')
+                    if s != "":
+                        str = f"{str},\n{s}"
+            if len(get_childnode(child)) == 0:
+                if str == "":
+                    str = f"self{parent_name}.{child.tagName}"
+                else:
+                    str = f"{str},\nself{parent_name}.{child.tagName}"
+    return  str
+
+
+def parse_leaf(node, parent):
+    """
+    Parse leaf nodes and write corresponding class attributes to file.
+    
+    :param node: XML node
+    :param parent: Parent node's name
+    """
+    for n in node.childNodes:
+        if isinstance(n, xml.dom.minidom.Element):
+            if n.hasChildNodes():
+                file.write(f"        self.{n.localName} = mqtt_topic_{n.localName}(self.message_to_send, self.message_dictonary, self.lock, '{parent}{n.localName}')\n")
+            else:
+                file.write(f"        self.{n.localName} = mqtt_{n.getAttribute('type')}_topic(self.message_to_send, self.message_dictonary, self.lock, '{parent}{n.localName}')\n")
 
 
 def parse_node(node, parent):
-    # Go through all childs in tree
+    """
+    Recursively parse XML nodes and write corresponding class definitions to file.
+    
+    :param node: XML node
+    :param parent: Parent node's name
+    """
     for n in node.childNodes:
-        if type(n) == xml.dom.minidom.Element:
-            name = "{}{}".format(parent, n.tagName)
-            # Check if it is root for ifd or not
-            if parent == None:
-                name = "{}{}".format(parent, n.tagName)
+        childs = get_childnode(n)
+        if isinstance(n, xml.dom.minidom.Element):
+            # Determine the node's name based on its parent
+            if parent is None:
+                name = ""
                 parse_node(n, "")
             else:
-                name = "{}{}".format(parent, n.tagName)
-                parse_node(n, "{}/".format(name))
-
-            file.write("class mqtt_topic_{}:\n".format(n.tagName))
-            if parent == None:
-                file.write("    def __init__(self):\n")
-                file.write("        self.message_to_send = []\n")
-                file.write("        message_dictonary = dict()\n")
-                file.write("        lock = Lock()\n")
-                file.write(
-                    "        self.message_dictonary = message_dictonary\n")
-
-            else:
-                file.write(
-                    "    def __init__(self, message_to_send, message_dictonary, lock):\n")
-                file.write("        self.message_to_send = message_to_send\n")
-                file.write(
-                    "        message_dictonary['{}'] = self\n".format(name))
-                file.write("        self.topic = '{}'\n".format(name))
-
-            file.write("        self.lock = lock\n")
-
-            childs = get_childnode(n)
-
-            if len(childs) == 0:
-
-                if n.getAttribute("message") != "":
-                    file.write("        self.payload = None\n")
-                    file.write("\n")
-                    file.write("    def get_payload(self):\n")
-                    converter_from_string = ""
-                    if n.getAttribute("type") == "bool":
-                        converter_from_string = "'True' in"
-                    elif n.getAttribute("type") == "date_time":
-                        converter_from_string = "string_to_time"
-                    elif n.getAttribute("type") == "int":
-                        converter_from_string = "int"
-                    elif n.getAttribute("type") == "float":
-                        converter_from_string = "float"
-
-                    file.write("        return {}(self.payload)\n".format(
-                        converter_from_string))
-                    file.write("\n")
-                    file.write("    def set_payload(self, {}):\n".format(
-                        n.getAttribute("message")))
-                    file.write("        self.payload = {}\n".format(
-                        n.getAttribute("message")))
-
-                file.write("\n")
-
-                file.write("    def create_message(self, topic, message, retain=\"\"):\n")
-                file.write("        if isinstance(topic, str):\n")
-                file.write("            topic_str = topic\n")
-                file.write("        else:\n")
-                file.write("            topic_str = topic.topic\n")
-
-                file.write(
-                    "        message_to_send = '{}:{}:{}'.format(topic_str, retain, message)\n")
-                file.write(
-                    "        if __debug__ == True:\n")
-                file.write(
-                    "            message_to_send = str(len(message_to_send.encode())).rjust(\n")
-                file.write("               3, '0') + message_to_send\n")
-
-                file.write("        return message_to_send\n")
-
-                file.write("\n")
-
-                if n.getAttribute("message") == "":
-                    file.write("    def publish(self):\n")
-                    file.write("        self.lock.acquire()\n")
-                    file.write("        message = ''\n")
+                if parent == "":
+                    name = f"{n.tagName}"
                 else:
-                    file.write("    def publish(self, {}):\n".format(n.getAttribute(
-                        "message")))
-                    file.write("        self.lock.acquire()\n")
-                    convert_to_string = ""
-                    if n.getAttribute("type") == "date_time":
-                        convert_to_string = "time_to_string"
-                    file.write("        message = {}({})\n".format(convert_to_string, n.getAttribute(
-                        "message")))
-                file.write(
-                    "        self.message_to_send.append(self.create_message(self.topic, message))\n")
-                file.write("        self.lock.release()\n")
+                    name = f"{parent}/{n.tagName}"
+                
+                parse_node(n, f"{name}")
 
-                file.write("\n")
+            # Write class definition for the node
+            if parent is None:
+                file.write(f"\nclass mqtt_topic_{n.tagName} (mqtt_base_topic):\n")
+                file.write("    def __init__(self):\n")
+                file.write("        super().__init__([], dict(), Lock(), \"\")\n")
+            else:
+                if len(childs) > 0:
+                    file.write(f"\nclass mqtt_topic_{n.tagName} (mqtt_base_topic):\n")
+                    file.write("    def __init__(self, message_to_send, message_dictonary, lock, topic_name):\n")
+                    file.write("        super().__init__(message_to_send, message_dictonary, lock, topic_name)\n")
 
+            # Parse the leaf nodes of the current node
+            if parent is None:
+                parse_leaf(n, "")
+            else:
+                parse_leaf(n, f"{name}/")
 
-                # file.write("    def discovery(self, name):\n")
-                # file.write("        self.lock.acquire()\n")
-                # file.write("        string = re.sub(r\"\/.{1,}\/\", \"/\", self.topic)\n")
-                # file.write(
-                #     "        config = \"{\\\"name\\\":\\\"\"+name+\"\\\", \\\"state_topic\\\":\\\"\"+self.topic+\"\\\", \\\"frc_upd\\\":\\\"true\\\"}\"\n")
-                # file.write(
-                #     "        self.message_to_send.append(self.create_message(\"homeassistant/\"+string+ \"/config\", config, \"Retain\"))\n")
-                # file.write("        self.lock.release()\n")
-
-                # file.write("\n")
-
-
-                file.write("    def override(self, override, value):\n")
-                file.write("        if override == True:\n")
-                file.write("            override_str = \"override\"\n")
-                file.write("        else:\n")
-                file.write("           override_str = \"normal\"\n")
-                file.write("        payload = \"{{\\\"name\\\": \\\"{}\\\",\\\"state\\\": \\\"{}\\\",\\\"value\\\": \\\"{}\\\" }}\".format(\n")
-                file.write("                self.topic, override_str, value)\n")
-                  
-                file.write("        self.lock.acquire()\n")
-                file.write("        self.message_to_send.append(self.create_message('override', payload))\n")
-                file.write("        self.lock.release()\n")
-
-                file.write("\n")
-
-                file.write("    def subscribe(self):\n")
-                file.write("        self.lock.acquire()\n")
-                file.write(
-                    "        self.message_to_send.append(self.create_message('subscribe', self.topic))\n")
-                file.write("        self.lock.release()\n")
-
-                file.write("    def __eq__(self, other):\n")
-                file.write("        if other == None:\n")
-                file.write("            return False\n")
-                file.write("\n")
-                file.write("        if type(other) is str:\n")
-                file.write("            other_topic = other\n")
-                file.write("        else:")
-                file.write("            other_topic = other.topic\n")
-                file.write("\n")
-                file.write("        if self.topic == other_topic:\n")
-                file.write("            return True\n")
-                file.write("        else:\n")
-                file.write("            return False\n")
-
-            # if have child we itterate through all
-            for child in childs:
-                file.write("        self.{} = mqtt_topic_{}(self.message_to_send, message_dictonary, self.lock)\n".format(
-                    child, child))
-            file.write("\n")
-
-            # if it is the root we make some methods 
-            if parent == None:
-
+            # Add methods to the root class
+            if parent is None:
                 file.write("    def subscribe_all(self):\n")
-
                 print_subscribe_all(n, "")
-
-                file.write("\n")
-                file.write("    def get_message_to_send(self):\n")
-                file.write("        return self.message_to_send\n")
-
-                file.write("    def clear_message_to_send(self):\n")
-                file.write("        self.message_to_send.clear()\n")
-
-                file.write("    def get_message(self, message_as_text):\n")
-                file.write(
-                    "        return self.message_dictonary[message_as_text]\n")
-
-        file.write("\n")
-        file.write("\n")
+                file.write("    def get_all_leafs(self):\n")
+                file.write(f"        return [{print_all_leafs(n, "")}]\n")
+                
+                # file.write("\n    def get_message_to_send(self):\n")
+                # file.write("        return self.message_to_send\n")
+                # file.write("\n    def clear_message_to_send(self):\n")
+                # file.write("        self.message_to_send.clear()\n")
+                # file.write("\n    def get_message(self, message_as_text):\n")
+                # file.write("        return self.message_dictonary[message_as_text]\n")
 
 
-file.write("from datetime import datetime\n")
+# Write the necessary imports to the output file
 file.write("from threading import Lock\n")
-file.write("import re\n")
-file.write("def string_to_time(timeStr):\n")
-file.write("    return datetime.strptime(timeStr, '%Y-%m-%d %H:%M:%S.%f')\n")
+file.write("from mqtt_base_topic import mqtt_base_topic")
 
+# Get all topic types and write them as imports
+all_types = get_all_topic_typed()
+for subclass in all_types:
+    file.write(f", {subclass.__name__}")
 
-file.write("def time_to_string(_time):\n")
-file.write("    return _time.strftime('%Y-%m-%d %H:%M:%S.%f')\n")
-
+# Parse the XML document starting from the root
 parse_node(doc, None)
+
+# Close the output file
 file.close()

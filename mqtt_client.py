@@ -115,8 +115,7 @@ class mqtt_client():
                         else:
                             self.notify_client(topic, pyaload)
                 else:
-                    self._log.info('Client {} not correct size'.format(
-                                self.client_name))
+                    self._log.info('Client {} not correct size'.format(self.client_name))
         else:
             self.mqqt_client.loop_start()  # start the loop
             while True:
@@ -129,7 +128,7 @@ class mqtt_client():
     def notify_client(self, topic_str, message):
         topic = self.mqtt_topic.get_message(topic_str)
         if topic != None:
-            topic.payload = message
+            topic.set_payload(message)
 
             if self.subscribe_with_method_name:
                 if topic_str in self.calback_dictonary:

@@ -1,18 +1,18 @@
 <ifd>
 <simulation>
-    <connected message="client_name" type="str"/>
-    <disconnected message="client_name" type="str"/>
-    <idle message="client_name" type="str"/>
-    <verbose />
-    <started message="status" type="bool" text="start:stop"/>
-    <speed message="scale" type="int"/>
+    <connected message="client_name" type="string"/>
+    <disconnected message="client_name" type="string"/>
+    <idle message="client_name" type="string"/>
+    <verbose type="void"/>
+  <started message="status" type="bool" text="start:stop"/>
+     <speed message="scale" type="int"/>
 </simulation>
 <message>
-    <time_start message="start" type="date_time"/>
-    <time_ten_yard message="ten_yard" type="date_time"/>
-    <time_twenty_yard message="twenty_yard" type="date_time"/>
-    <time_thirty_yard message="thirty_yard" type="date_time"/>
-    <time_fourty_yard message="fourty_yard" type="date_time"/>
+    <time_start message="start" type="datetime"/>
+    <time_ten_yard message="ten_yard" type="datetime"/>
+    <time_twenty_yard message="twenty_yard" type="datetime"/>
+    <time_thirty_yard message="thirty_yard" type="datetime"/>
+    <time_fourty_yard message="fourty_yard" type="datetime"/>
     <reset> 
         <value message="value" type="int"/>
         <counter message="counter" type="int"/>
@@ -27,6 +27,6 @@
     <time_fourty_yard message="fourty_yard" type="int"/>
 </io>
 <environment>
-    <date_time message="time" type="date_time"/>
+    <date_time message="time" type="datetime"/>
 </environment>
 </ifd>    

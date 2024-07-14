@@ -1,7 +1,6 @@
 
 import tkinter
 from threading import Thread
-from mqtt_topic import string_to_time
 
 
 class panel_simulation_gui(Thread):
@@ -25,8 +24,7 @@ class panel_simulation_gui(Thread):
         self.mqtt_client.send_message_to_server()
 
     def on_date_time(self):
-        self.mqtt_client.mqtt_topic.environment.date_time.publish(
-            string_to_time(self.date_time_inp.get()))
+        self.mqtt_client.mqtt_topic.environment.date_time.publish(self.date_time_inp.get())
         self.mqtt_client.send_message_to_server()
 
     def run(self):

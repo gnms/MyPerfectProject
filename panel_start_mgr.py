@@ -1,7 +1,5 @@
 
 import tkinter
-from threading import Thread
-from mqtt_topic import string_to_time
 import subprocess
 import xml.dom.minidom
 

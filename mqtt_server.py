@@ -111,8 +111,7 @@ class mqtt_server(object):
                         pyaload = groups[2]
 
                         if topic == "subscribe":
-                            self._log.info(
-                                'Client {} subscribe {}'.format(client.client_id, pyaload))
+                            self._log.info('Client {} subscribe {}'.format(client.client_id, pyaload))
                             client.add_topic(pyaload)
 
                         elif topic == "override":
@@ -131,13 +130,13 @@ class mqtt_server(object):
                     self._log.info('Client {} disconnected, no valid data'.format(client.client_id))
                     self.remove_client(client.client_id)
                     return False
-            except:
-                self._log.info('Client {} disconnected exception'.format(client.client_id))               
+            except Exception as e:
+                self._log.error(f"Client {client.client_id} disconnected exception", exc_info=True)               
                 self.remove_client(client.client_id)
                 return False
 
     def broadcastMsg(self, topic, msg):
-        # self._log.info('Send topic {} message {}"'.format(topic, msg))
+        self._log.info('Send topic {} message {}"'.format(topic, msg))
         for clientId in self.client_list.keys():
             try:
                 self.client_list[clientId].send_msg(topic, msg)
@@ -146,8 +145,7 @@ class mqtt_server(object):
 
     def remove_client(self, clientId):
         client_name = self.client_list[clientId].client_name
-        self._log.info(
-            'Client {} disconnected with name {}'.format(clientId, client_name))
+        self._log.info('Client {} disconnected with name {}'.format(clientId, client_name))
         self.client_list[clientId].close_client()
         del self.client_list[clientId]
         self.broadcastMsg("simulation/disconnected", client_name)
@@ -158,12 +156,11 @@ class mqtt_server(object):
         except ValueError as e:
             self._log.info('invalid json: %s' % e)
             return None # or: raise
-        for signal in data:
-            if signal['state'] == "normal":
-                # remove if exist in list
-                self.override_dict.pop(signal['name'], None)
-            else:
-                self.override_dict[signal['name']] = signal['value']
+        if data['state'] == "normal":
+            # remove if exist in list
+            self.override_dict.pop(data['name'], None)
+        else:
+            self.override_dict[data['name']] = data['value']
 
 
 if __name__ == "__main__":

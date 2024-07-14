@@ -79,7 +79,7 @@ class client_time(mqtt_client):
             self._log.info('STOPED')
 
     def simulation_speed(self, speed):
-        self.scale = speed / 100
+        self.scale = speed / 100.0
         if self.state == CLIENT_TIME_STATES.RUNNING:
             if self.timer != None:
                 self.timer.cancel()

@@ -8,6 +8,24 @@ class mqtt_base_topic ():
         message_dictonary[topic] = self   
         self.topic = topic  
         self.lock = lock
+
+    def get_message_to_send(self):
+        return self.message_to_send
+
+    def clear_message_to_send(self):
+        self.message_to_send.clear()
+
+    def get_message(self, message_as_text):
+        return self.message_dictonary[message_as_text]
+    
+    def get_topic(self) -> str:
+        return self.topic
+
+
+
+class mqtt_leaf_topic (mqtt_base_topic):
+    def __init__(self, message_to_send, message_dictonary, lock, topic_name):
+        super().__init__(message_to_send, message_dictonary, lock, topic_name)
         self.payload = None
 
     def get_payload(self):
@@ -75,7 +93,7 @@ class mqtt_base_topic ():
     def convert_to_type(self, payload):
         return
     
-class mqtt_string_topic (mqtt_base_topic):
+class mqtt_string_topic (mqtt_leaf_topic):
     def __init__(self, message_to_send, message_dictonary, lock, topic_name):
         super().__init__(message_to_send, message_dictonary, lock, topic_name)
 
@@ -87,7 +105,7 @@ class mqtt_string_topic (mqtt_base_topic):
 
 
     
-class mqtt_int_topic (mqtt_base_topic):
+class mqtt_int_topic (mqtt_leaf_topic):
     def __init__(self, message_to_send, message_dictonary, lock, topic_name):
         super().__init__(message_to_send, message_dictonary, lock, topic_name)
 
@@ -98,7 +116,7 @@ class mqtt_int_topic (mqtt_base_topic):
         return int(float(payload)+0.5)    
     
 
-class mqtt_datetime_topic (mqtt_base_topic):
+class mqtt_datetime_topic (mqtt_leaf_topic):
     def __init__(self, message_to_send, message_dictonary, lock, topic_name):
         super().__init__(message_to_send, message_dictonary, lock, topic_name)
 
@@ -114,7 +132,7 @@ class mqtt_datetime_topic (mqtt_base_topic):
         return conerted
     
 
-class mqtt_bool_topic (mqtt_base_topic):
+class mqtt_bool_topic (mqtt_leaf_topic):
     def __init__(self, message_to_send, message_dictonary, lock, topic_name):
         super().__init__(message_to_send, message_dictonary, lock, topic_name)
 
@@ -122,10 +140,13 @@ class mqtt_bool_topic (mqtt_base_topic):
         return "{}".format(self.payload)
 
     def convert_to_type(self, payload):
-        return bool(payload)
+        if isinstance(payload, bool):
+            return payload
+        if payload == "True":
+            return True
+        return False
     
 
-class mqtt_void_topic (mqtt_base_topic):
+class mqtt_void_topic (mqtt_leaf_topic):
     def __init__(self, message_to_send, message_dictonary, lock, topic_name):
         super().__init__(message_to_send, message_dictonary, lock, topic_name)
-        pass
