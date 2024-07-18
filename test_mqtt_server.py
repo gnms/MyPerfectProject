@@ -1,4 +1,4 @@
-from mqtt_server import mqtt_server
+from server.mqtt_server import mqtt_server
 
 
 def test_mqtt_split_msg():

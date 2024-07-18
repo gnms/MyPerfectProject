@@ -1,7 +1,7 @@
 import joblib
 from sklearn.linear_model import LogisticRegression
 import math
-from mqtt_client import mqtt_client
+from clients.mqtt_client import mqtt_client
 from astral import Astral
 import numpy as np
 from sklearn.externals import joblib

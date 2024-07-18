@@ -1,6 +1,6 @@
 from datetime import datetime
 from threading import Lock
-from mqtt_base_topic import mqtt_base_topic, mqtt_string_topic, mqtt_int_topic, mqtt_time_topic, mqtt_bool_topic
+from topics_types.mqtt_base_topic import mqtt_base_topic, mqtt_string_topic, mqtt_int_topic, mqtt_time_topic, mqtt_bool_topic
 
 
 import re

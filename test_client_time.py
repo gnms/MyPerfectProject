@@ -1,5 +1,5 @@
-from client_time import client_time
-from client_time import CLIENT_STATES
+from clients.client_time import client_time
+from clients.client_time import CLIENT_STATES
 
 
 def test_mqtt_topic():

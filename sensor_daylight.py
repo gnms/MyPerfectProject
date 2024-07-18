@@ -1,5 +1,5 @@
-from mqtt_topic import time_to_string
-from mqtt_client import mqtt_client
+from topics_types.mqtt_topic import time_to_string
+from clients.mqtt_client import mqtt_client
 from pyowm import OWM
 from astral.location import Location, LocationInfo
 from astral.sun import sun

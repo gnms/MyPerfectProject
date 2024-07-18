@@ -1,4 +1,4 @@
-from mqtt_topic import mqtt_topic_ifd
+from topics_types.mqtt_topic import mqtt_topic_ifd
 from datetime import datetime
 from dateutil import tz
 

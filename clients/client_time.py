@@ -1,4 +1,12 @@
-from mqtt_client import mqtt_client
+import sys
+import os
+
+# Lägg till sökvägen till parent_module i sys.path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+sys.path.insert(0, parent_dir)
+
+from clients.mqtt_client import mqtt_client
 from enum import Enum
 import threading
 from datetime import datetime, timedelta
@@ -117,7 +125,7 @@ class client_time(mqtt_client):
             self.timer = threading.Timer(1/self.scale, self.update_time_sim)
             self.timer.start()
             #self._log.info('New Time = {}'.format(self.simulation_time))
-            self.step_milliseconds(60000)
+            self.step_milliseconds(100)
             self.mqtt_topic.environment.date_time.publish(self.simulation_time)
             self.send_message_to_server()
         else:

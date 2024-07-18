@@ -1,5 +1,5 @@
 
-from mqtt_client import mqtt_client
+from clients.mqtt_client import mqtt_client
 import enum
 import json
 

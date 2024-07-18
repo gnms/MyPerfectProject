@@ -1,4 +1,4 @@
-from mqtt_topic import mqtt_topic_ifd
+from topics_types.mqtt_topic import mqtt_topic_ifd
 import sys
 import logging
 import socket
@@ -18,8 +18,7 @@ class mqtt_client():
         self._log.setLevel(logging.DEBUG)
         fh = logging.FileHandler('my_perfect_project.log')
         fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            '%(asctime)s :: '+self.client_name+' :: %(levelname)s :: %(funcName)s(%(lineno)d) :: %(message)s')
+        formatter = logging.Formatter('%(asctime)s :: '+self.client_name+' :: %(levelname)s :: %(funcName)s(%(lineno)d) :: %(message)s')
         fh.setFormatter(formatter)
         self._log.addHandler(fh)
         self._log.info('Started')
@@ -41,14 +40,14 @@ class mqtt_client():
                     time.sleep(1)
                     pass
 
-            self.mqqt_client.on_connect = lambda client, userdata, flags, rc: self.on_connect(
-                client, userdata, flags, rc)
-            self.mqqt_client.on_message = lambda client, userdata, msg: self.on_message(
-                client, userdata, msg)
+            self.mqqt_client.on_connect = lambda client, userdata, flags, rc: self.on_connect(client, userdata, flags, rc)
+            self.mqqt_client.on_message = lambda client, userdata, msg: self.on_message(client, userdata, msg)
 
+        # We create an instance of the interface that shall be used in this application
+        # the interface is created with a tool that parse an xml-file.
         self.mqtt_topic = mqtt_topic_ifd()
 
-        # not send that we have connected if we not simulate
+        # We send that we have connected to the server.
         if __debug__ == True:
             self.mqtt_topic.simulation.connected.publish(self.client_name)
 
@@ -56,7 +55,7 @@ class mqtt_client():
 
         self.subscribe_with_method_name = True
 
-        ## Regex to validate the incoming data, teh data shall always start with 3 digits that is the size of the message
+        ## Regex to validate the incoming data, the data shall always start with 3 digits that is the size of the message
         self.validate_size = re.compile("^[0-9]{3}$")
 
     def run(self):
@@ -85,32 +84,36 @@ class mqtt_client():
                 except AttributeError:
                     pass
         if __debug__ == True:
+            # we start to send all messages that have queed to be sent during startup
+            # when those message are sent we start to listen for respons
+            # We have to send before becouse otherwise we will not send untill we receave a message
+            # if we not subscribe in topics wi will not recive anything.
             self.send_message_to_server()
+
+
             while True:
                 # self._log.info('Client {} wait for data'.format(self.client_name))
+                # We start to read the three bytes in the messages to know the size og the message
                 size_in_header = self.socket.recv(3).decode("utf-8")
 
+                # We validate so it is tre digits and no other characters in the message size.
                 if self.validate_size.match(size_in_header):
                     msg_size = int(size_in_header)
                     # data = self.socket.recv(msg_size).decode("utf-8")
                     read_data = 0
                     data = ""
                     while read_data < msg_size:
-                        data = data + \
-                            self.socket.recv(msg_size-read_data).decode("utf-8")
+                        data = data + self.socket.recv(msg_size-read_data).decode("utf-8")
                         read_data = len(data.encode())
                         if read_data < msg_size:
-                            self._log.info('Client {} MOREEEEEE'.format(
-                                self.client_name))
+                            self._log.info('Client {} MOREEEEEE'.format(self.client_name))
                     if data:
-                        result = re.search(
-                            r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data)
+                        result = re.search(r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data)
                         groups = result.groups()
                         topic = groups[0]
                         pyaload = groups[2]
                         if self.mqtt_topic.simulation.verbose == topic:
-                            self.mqtt_topic.simulation.connected.publish(
-                                self.client_name)
+                            self.mqtt_topic.simulation.connected.publish(self.client_name)
                             self.send_message_to_server()
                         else:
                             self.notify_client(topic, pyaload)
@@ -152,7 +155,7 @@ class mqtt_client():
         for msg in message_to_send:
             if __debug__ == True:
 
-                self._log.info('Send {} new data'.format(msg))
+                #self._log.info('Send {} new data'.format(msg))
                 self.send_on_socket(msg)
             else:
                 # we have to parse out if we have some flags that we shall send to mqtt

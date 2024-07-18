@@ -1,4 +1,4 @@
-from mqtt_client import mqtt_client
+from clients.mqtt_client import mqtt_client
 
 
 class client_measure(mqtt_client):

@@ -26,8 +26,7 @@ class mqtt_server(object):
         self._log.setLevel(logging.DEBUG)
         fh = logging.FileHandler('my_perfect_project.log')
         fh.setLevel(logging.DEBUG)
-        formatter = logging.Formatter(
-            '%(asctime)s :: mqtt_server :: %(levelname)s :: %(funcName)s(%(lineno)d) :: %(message)s')
+        formatter = logging.Formatter('%(asctime)s :: mqtt_server :: %(levelname)s :: %(funcName)s(%(lineno)d) :: %(message)s')
         fh.setFormatter(formatter)
         self._log.addHandler(fh)
         self._log.info('Started')
@@ -103,7 +102,7 @@ class mqtt_server(object):
                         ## overide -> if we shall overide a topic/signals value
                         ## simulation/connected -> the new connected client send its name on this topic.
                         data_Str = data
-                        self._log.info('regexdata {}'.format(data))
+                        #self._log.info('regexdata {}'.format(data))
                         result = re.search(r"(^[^:]{1,}):([^:]{0,}):(.{0,}$)", data_Str)
                         groups = result.groups()
 

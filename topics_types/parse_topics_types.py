@@ -3,7 +3,7 @@ import inspect
 import importlib.util
 
 # Specificera bas-klassen du vill hitta arvtagare till
-BASE_CLASS_NAME = 'mqtt_base_topic'
+BASE_CLASS_NAME = 'mqtt_leaf_topic'
 
 def is_subclass_of_base_class(obj, base_class):
     """Kontrollera om ett objekt är en subclass av bas-klassen."""

@@ -1,8 +1,8 @@
 # MyPerfectProject
-This project will demonstrate how to build a stabil IoT framework that shall be easy to extand and also develop. When using the framework it shall be easy to create high quality software, from design, dvceleoping with unit test and also do intigrationtest and finaly productioon test.
-All know that you should find defects early during the development, so with this framework and developing method it shall be easy to fins defects early in the development phase.
+This project will demonstrate how to build a stabil IoT framework that shall be easy to extand and also develop. When using the framework it shall be easy to create high quality software, from design, develeoping with unit test and also do intigrationtest and finaly productioon test.
+All know that you should find defects early during the development, so with this framework and developing method it shall be easy to find defects early in the development phase.
 
-The framewok make it easy to create anm IoT product or system, with that i mean that the system shall contaion small units that have only one purpus and all units are connected with each other with the mqtt protocoll, but the framework will hide the protocoll for the user and only use some function in the baseclass [see base class implementation](mqtt_client.py).
+The framewok make it easy to create an IoT product or system, with that i mean that the system shall contaion small units that have only one purpus and all units are connected with each other with the mqtt protocoll, but the framework will hide the protocoll for the user and only use some function in the baseclass [see base class implementation](mqtt_client.py).
 
 All signals and messages that will be used in the system shall be defined in a xml file. A tool included in this project will create and implementation of the interface that shall be used when comunicate between IoT nodes.
 
@@ -10,6 +10,11 @@ To make it possibly to do integration test in a virtual environment we will have
 
 
 ![](./system_overview.drawio.svg)
+
+
+# Event driven
+Each unit will only execute when it got an event, it can be from an I/O or another unit that send a message.
+
 
 
 # Create a client
@@ -56,3 +61,7 @@ Publish is used when
 ### subscribe
 
 ## Setup the client
+
+
+# Integrations test
+

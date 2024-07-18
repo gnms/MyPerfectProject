@@ -4,8 +4,8 @@
     <disconnected message="client_name" type="string"/>
     <idle message="client_name" type="string"/>
     <verbose type="void"/>
-  <started message="status" type="bool" text="start:stop"/>
-     <speed message="scale" type="int"/>
+    <started message="status" type="bool" text="start:stop"/>
+    <speed message="scale" type="int"/>
 </simulation>
 <message>
     <time_start message="start" type="datetime"/>

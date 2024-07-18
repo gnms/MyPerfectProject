@@ -1,8 +1,8 @@
 <scripts>
-    <script name="Mqtt Server" path="mqtt_server.py" _auto_start="fasle"/>
-    <script name="Timepanel" path="panel_simulation.py" _auto_start="false"/>
-    <script name="Signal Mgr" path="panel_signal_mgr.py" _auto_start="false"/>
-    <script name="Time Client" path="client_time.py" _auto_start="false"/>
+    <script name="Mqtt Server" path="server/mqtt_server.py" _auto_start="fasle"/>
+    <script name="Timepanel" path="panels/panel_simulation.py" _auto_start="false"/>
+    <script name="Signal Mgr" path="panels/panel_signal_mgr.py" _auto_start="false"/>
+    <script name="Time Client" path="clients/client_time.py" _auto_start="false"/>
     <!--<script name="Logger" path="gnome-terminal -x bash -c 'tail -F my_perfect_project.log; exec bash'" auto_start="true"/>
     <script name="Day info" path="sensor_dayinfo.py"/>
     <script name="Daylight sensor" path="sensor_daylight.py"/>

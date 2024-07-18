@@ -38,24 +38,19 @@ class panel_simulation_gui(Thread):
         simulation_frame = tkinter.LabelFrame(main_frame, text='simulation')
         simulation_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
 
-        self.started_btn = tkinter.Button(
-            simulation_frame, text="start", command=self.on_started)
+        self.started_btn = tkinter.Button(simulation_frame, text="start", command=self.on_started)
         self.started_btn.pack(side=tkinter.LEFT)
 
         speedframe = tkinter.Frame(simulation_frame)
         speedframe.pack(side=tkinter.LEFT)
 
-        speed_lbl = tkinter.Label(
-            speedframe, text="speed")
+        speed_lbl = tkinter.Label(speedframe, text="speed")
         speed_lbl.pack(side=tkinter.LEFT)
-        self.speed_inp = tkinter.Entry(
-            speedframe, text="100")
+        self.speed_inp = tkinter.Entry(speedframe, text="100")
         self.speed_inp.pack(side=tkinter.LEFT)
-        self.speed_is = tkinter.Label(
-            speedframe, text="todo")
+        self.speed_is = tkinter.Label(speedframe, text="todo")
         self.speed_is.pack(side=tkinter.LEFT)
-        speed_btn = tkinter.Button(
-            speedframe, text="send", command=self.on_speed)
+        speed_btn = tkinter.Button(speedframe, text="send", command=self.on_speed)
         speed_btn.pack(side=tkinter.LEFT)
 
         fillframe = tkinter.LabelFrame(simulation_frame, text='FILL')
@@ -67,17 +62,13 @@ class panel_simulation_gui(Thread):
 
         date_timeframe = tkinter.Frame(environment_frame)
         date_timeframe.pack(side=tkinter.LEFT)
-        date_time_lbl = tkinter.Label(
-            date_timeframe, text="date_time")
+        date_time_lbl = tkinter.Label(date_timeframe, text="date_time")
         date_time_lbl.pack(side=tkinter.LEFT)
-        self.date_time_inp = tkinter.Entry(
-            date_timeframe, text="date_time")
+        self.date_time_inp = tkinter.Entry(date_timeframe, text="date_time")
         self.date_time_inp.pack(side=tkinter.LEFT)
-        self.date_time_is = tkinter.Label(
-            date_timeframe, text="date_time")
+        self.date_time_is = tkinter.Label(date_timeframe, text="date_time")
         self.date_time_is.pack(side=tkinter.LEFT)
-        date_time_btn = tkinter.Button(
-            date_timeframe, text="send", command=self.on_date_time)
+        date_time_btn = tkinter.Button(date_timeframe, text="send", command=self.on_date_time)
         date_time_btn.pack(side=tkinter.LEFT)
 
         fillframe = tkinter.LabelFrame(environment_frame, text='FILL')
@@ -90,8 +81,7 @@ class panel_simulation_gui(Thread):
         self.client_list = tkinter.Listbox(client_frame)
 
         for existing_client in self.mqtt_client.online_client_list:
-            self.client_list.insert(
-                self.client_list.size() + 1, existing_client)
+            self.client_list.insert(self.client_list.size() + 1, existing_client)
             self.mqtt_client._log.info('Add client {}'.format(existing_client))
 
         # self.client_list.insert(1, "Python")

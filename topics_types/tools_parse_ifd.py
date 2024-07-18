@@ -1,15 +1,17 @@
 import xml.dom.minidom
-from plugins import PluginHandler
+from parse_topics_types import get_all_topic_typed
 import os
-import traceback
-from importlib import util
-from topics_types.parse_topics_types import get_all_topic_typed
+
+
+path = os.path.abspath(__file__)
+search_directory = os.path.dirname(path)
 
 # Parse the XML document
-doc = xml.dom.minidom.parse("mqtt_topic.xml")
+doc = xml.dom.minidom.parse(f"{search_directory}/mqtt_topic.xml")
 
 # Open the output Python file for writing
-file = open("mqtt_topic.py", "w+")
+
+file = open(f"{search_directory}/mqtt_topic.py", "w+")
 
 
 def get_childnode(node):
@@ -124,17 +126,11 @@ def parse_node(node, parent):
                 file.write("    def get_all_leafs(self):\n")
                 file.write(f"        return [{print_all_leafs(n, "")}]\n")
                 
-                # file.write("\n    def get_message_to_send(self):\n")
-                # file.write("        return self.message_to_send\n")
-                # file.write("\n    def clear_message_to_send(self):\n")
-                # file.write("        self.message_to_send.clear()\n")
-                # file.write("\n    def get_message(self, message_as_text):\n")
-                # file.write("        return self.message_dictonary[message_as_text]\n")
 
 
 # Write the necessary imports to the output file
 file.write("from threading import Lock\n")
-file.write("from mqtt_base_topic import mqtt_base_topic")
+file.write("from topics_types.mqtt_base_topic import mqtt_base_topic")
 
 # Get all topic types and write them as imports
 all_types = get_all_topic_typed()

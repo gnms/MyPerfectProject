@@ -30,8 +30,7 @@ class mqtt_socket_client:
 
         if topic_str in self.topic_list:
 
-            msg_to_send = str(len(message_to_send.encode())).rjust(
-                3, '0') + message_to_send
+            msg_to_send = str(len(message_to_send.encode())).rjust(3, '0') + message_to_send
             self.socket.send(msg_to_send.encode())
 
     def close_client(self):

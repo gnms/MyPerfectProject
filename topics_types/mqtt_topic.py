@@ -1,5 +1,5 @@
 from threading import Lock
-from mqtt_base_topic import mqtt_base_topic, mqtt_bool_topic, mqtt_datetime_topic, mqtt_int_topic, mqtt_string_topic, mqtt_void_topic
+from topics_types.mqtt_base_topic import mqtt_base_topic, mqtt_bool_topic, mqtt_datetime_topic, mqtt_int_topic, mqtt_string_topic, mqtt_void_topic
 class mqtt_topic_simulation (mqtt_base_topic):
     def __init__(self, message_to_send, message_dictonary, lock, topic_name):
         super().__init__(message_to_send, message_dictonary, lock, topic_name)

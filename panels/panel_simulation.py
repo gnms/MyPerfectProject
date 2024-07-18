@@ -1,4 +1,12 @@
-from mqtt_client import mqtt_client
+import sys
+import os
+
+# Lägg till sökvägen till parent_module i sys.path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(script_dir, os.pardir))
+sys.path.insert(0, parent_dir)
+
+from clients.mqtt_client import mqtt_client
 from panel_simulation_gui import panel_simulation_gui
 
 

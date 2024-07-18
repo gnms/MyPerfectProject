@@ -1,6 +1,6 @@
 from sensor_daylight import sensor_daylight
-from mqtt_topic import mqtt_topic_ifd
-from mqtt_topic import string_to_time
+from topics_types.mqtt_topic import mqtt_topic_ifd
+from topics_types.mqtt_topic import string_to_time
 
 
 def test_daylight_model():

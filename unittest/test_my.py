@@ -1,6 +1,6 @@
 #import mqtt_base_topic
 #from threading import Lock
-import mqtt_topic
+import topics_types.mqtt_topic as mqtt_topic
 
 def test_string_type():
     """

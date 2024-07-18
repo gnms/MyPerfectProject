@@ -2,6 +2,7 @@
 import tkinter
 import subprocess
 import xml.dom.minidom
+import os
 
 
 class script_data():
@@ -63,10 +64,17 @@ class panel_start_mgr():
         script_frame = tkinter.Frame(self.simulation_frame)
         script_frame.pack(fill=tkinter.X, expand=1, anchor=tkinter.NW)
 
-        xml_doc = xml.dom.minidom.parse("start_mgr.xml")
 
+
+
+        path = os.path.abspath(__file__)
+        search_directory = os.path.dirname(path)
+        xml_doc = xml.dom.minidom.parse(f"{search_directory}/start_mgr.xml")
+
+        path = os.path.abspath(__file__+"/..")
+        project_directory = os.path.dirname(path)
         root = self.find_root(xml_doc)
-        self.parse_file(root)
+        self.parse_file(root, project_directory)
 
         # start if auto
 
@@ -87,11 +95,11 @@ class panel_start_mgr():
                     return n
         return None
 
-    def parse_file(self, root):
+    def parse_file(self, root, path):
         for node in root.childNodes:
             if type(node) == xml.dom.minidom.Element:
                 self.add_script(node.getAttribute(
-                    "name"), node.getAttribute("path"), node.getAttribute("auto_start"))
+                    "name"), path +"/"+ node.getAttribute("path"), node.getAttribute("auto_start"))
 
     def on_started(self, nr):
         self.script_list[nr].toogle_script()
